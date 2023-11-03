@@ -12,8 +12,8 @@
 ## Quick start ⚡
 - [Application Diagram](#application-architecture-in-diagram)
 - [For Developers](#instructions-for-developers-how-to-run-project-locally)
-- [Run in Production](#instructions-how-to-deploy-project-in-production)
-- [Partners](#partners- )
+- [Run in Production](#instructions-how-to-deploy-project-in-production-or-stage)
+- [Partners](#partners-)
 
 ## General info
 This repository contains a source code of the Class Schedule Project.
@@ -51,7 +51,19 @@ DB_NAME=schedule
 PG_USER=schedule
 PG_DUMP_FILE='backup/2023-09-07.dump'
 
+MONGO_DB_NAME=schedules
+MONGO_CONTAINER_NAME=mongo_container
+PG_CONTAINER_NAME=pg_container
+REDIS_CONTAINER_NAME=redis_container
+TOM_CONTAINER_NAME=tomcat_container
+
+IP_SUBNET='192.168.100.0/28'
+IP_PG='192.168.100.2'
+IP_REDIS='192.168.100.3'
+IP_MONGO='192.168.100.4'
+IP_TOMCAT='192.168.100.5'
 ```
+
 ### Export variables from .env 
 ```shell
 source .env
@@ -59,40 +71,44 @@ source .env
 
 ### Create docker network
 ```shell
-docker network create schedule_network
+docker network create --driver bridge --subnet $IP_SUBNET schedule_network
 ```
 
 ## Database PostgresQL
 1. Run this simple commands to Start version 14 of PostgreSQL in Docker container
 ```shell
-docker run -d --name postgresql \
+docker run -d --name $PG_CONTAINER_NAME \
 	--network schedule_network \
+	--ip $IP_PG \
 	-v postgres-data:/var/lib/postgresql/data \
 	-e POSTGRES_PASSWORD=$PG_PASSWORD \
-	-e POSTGRES_DB=$DB_NAME \ 
+	-e POSTGRES_DB=$DB_NAME \
 	-e POSTGRES_USER=$PG_USER \
 	-p 5432:5432 postgres:14
 ```
 2. Restore PG data from file
 ```shell
-docker cp $PG_DUMP_FILE postgresql:/tmp/backup.dump
-docker exec -it postgresql psql -U $PG_USER -d $DB_NAME -f /tmp/backup.dump
-docker exec -it postgresql psql -U $PG_USER -d $DB_NAME -c "CREATE DATABASE ${DB_NAME}_test WITH OWNER $PG_USER"
+docker cp $PG_DUMP_FILE $PG_CONTAINER_NAME:/tmp/backup.dump
+docker exec -it $PG_CONTAINER_NAME psql -U $PG_USER -d $DB_NAME -f /tmp/backup.dump
+docker exec -it $PG_CONTAINER_NAME psql -U $PG_USER -d $DB_NAME -c "CREATE DATABASE ${DB_NAME}_test WITH OWNER $PG_USER"
 ```
-2. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
+3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
 ```text
-hibernate.connection.url=jdbc:postgresql://postgresql:5432/schedule
+hibernate.connection.url=jdbc:postgresql://${IP_PG}:${PG_PORT}/schedule
 ```
 ## Database Redis
 1. Start the latest version of Redis in Docker container   
 ```shell
 docker volume create redis-data
-docker run -d --name redis 	-v redis-data:/data -p $REDIS_PORT:$REDIS_PORT redis 
+docker run -d --network schedule_network \
+   --name $REDIS_CONTAINER_NAME \
+   --ip $IP_REDIS \
+   -v redis-data:/data \
+   -p $REDIS_PORT:$REDIS_PORT redis 
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
-redis.address = redis://redis:6379
-redis.address = redis://redis:${REDIS_PORT}
+redis.address = redis://${IP_REDIS}:${REDIS_PORT}
 ```
 
 ## Starting backend server using IntelliJ IDEA and Tomcat
@@ -107,7 +123,14 @@ redis.address = redis://redis:${REDIS_PORT}
 9. Press OK to save the configuration
 10. `Run –>> Run 'Tomcat 9.0.50'` to start the backend server
 
-
+## (Optionally) Run TomCat App in Docker container
+```shell
+docker build -t tom_app_img .
+docker run -d --network schedule_network \
+    --name $TOM_CONTAINER_NAME \
+    --ip $IP_TOMCAT \
+    -p $BACKEND_PORT:$BACKEND_PORT tom_app_img
+```
 ------------------------------------------
 # Instructions how to deploy Project in Production or Stage
 
