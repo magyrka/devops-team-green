@@ -1,10 +1,11 @@
-[![CI][ci-img]][ci-url]
-[![Discord][discord-img]][discord-url]
-[![server pulls][docker-server-pulls-img]][docker-server-image-url]
+
 [![version](https://img.shields.io/badge/Ubuntu-20.04-brown)](https://semver.org)
-[![version](https://img.shields.io/badge/NodeJS--green)](https://semver.org)
+[![version](https://img.shields.io/badge/NodeJS-14-green)](https://semver.org)
 [![version](https://img.shields.io/badge/JAVA-11-green)](https://semver.org)
 [![version](https://img.shields.io/badge/Posrgres-11-blue)](https://semver.org)
+[![version](https://img.shields.io/badge/Redis-latest-red)](https://semver.org)
+[![version](https://img.shields.io/badge/MongoDB-latest-green)](https://semver.org)
+[![version](https://img.shields.io/badge/Tomcat-9.0.5-yellow)](https://semver.org)
 
 
 # Class schedule
@@ -12,8 +13,8 @@
 - [Application Diagram](#application-architecture-in-diagram)
 - [For Developers](#instructions-for-developers-how-to-run-project-locally)
 - [Run in Production](#instructions-how-to-deploy-project-in-production)
-- [Partners](#partners-)
-- 
+- [Partners](#partners- )
+
 ## General info
 This repository contains a source code of the Class Schedule Project.
 
@@ -26,7 +27,7 @@ Link to the development version of the site: https://develop-softserve.herokuapp
 
 ------------------------------------------
 # Instructions for Developers (how to run Project locally)
-Assuming that all commands will be running in shell from working directory
+Assuming that all commands will be running in shell from working directory and DockerCLI is installed
 ## Clone repository locally from Git
 In order to create a local copy of the project you need:
 1. Download and install the last version of Git https://git-scm.com/downloads
@@ -48,7 +49,7 @@ PG_PORT=5432
 PG_PASSWORD=
 DB_NAME=schedule
 PG_USER=schedule
-PG_DUMP_FILE='../backup/2023-09-07.dump'
+PG_DUMP_FILE='backup/2023-09-07.dump'
 
 ```
 ### Export variables from .env 
@@ -60,7 +61,6 @@ source .env
 ```shell
 docker network create schedule_network
 ```
-
 
 ## Database PostgresQL
 1. Run this simple commands to Start version 14 of PostgreSQL in Docker container
@@ -107,21 +107,12 @@ redis.address = redis://redis:${REDIS_PORT}
 9. Press OK to save the configuration
 10. `Run –>> Run 'Tomcat 9.0.50'` to start the backend server
 
-## Starting frontend server using Node.js
-1. Download and install Node.js 14.17.4 LTS version https://nodejs.org/en/
-2. Open a terminal in `/frontend` directory of the downloaded project and run the following command.
-
-       npm install
-3. After the installation is finished run the following command to start the frontend server
-
-       npm start
-
 
 ------------------------------------------
-# Instructions how to deploy Project in Production
+# Instructions how to deploy Project in Production or Stage
 
 ## For deploying this application  run this simple commands (on VM or Remote Server):
-### Clone repostory
+### Clone repository
 ```shell
 git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 ```
@@ -130,6 +121,7 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 ```shell
 docker compose up -d -f docker-compose.prod.yaml
 ```
+---------------------------------------
 # Partners ❤️
 ## In the list, you can find collaborators, who was working in this project
 - Developer Team:
