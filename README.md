@@ -1,7 +1,10 @@
 [![CI][ci-img]][ci-url]
 [![Discord][discord-img]][discord-url]
-[![Coverage Status][coverage-img]][coverage-url]
 [![server pulls][docker-server-pulls-img]][docker-server-image-url]
+[![version](https://img.shields.io/badge/Ubuntu-20.04-brown)](https://semver.org)
+[![version](https://img.shields.io/badge/NodeJS--green)](https://semver.org)
+[![version](https://img.shields.io/badge/JAVA-11-green)](https://semver.org)
+[![version](https://img.shields.io/badge/Posrgres-11-blue)](https://semver.org)
 
 
 # Class schedule
