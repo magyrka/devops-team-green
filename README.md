@@ -2,7 +2,7 @@
 [![version](https://img.shields.io/badge/Ubuntu-20.04-brown)](https://semver.org)
 [![version](https://img.shields.io/badge/NodeJS-14-green)](https://semver.org)
 [![version](https://img.shields.io/badge/JAVA-11-green)](https://semver.org)
-[![version](https://img.shields.io/badge/Posrgres-11-blue)](https://semver.org)
+[![version](https://img.shields.io/badge/Posrgres-14-blue)](https://semver.org)
 [![version](https://img.shields.io/badge/Redis-latest-red)](https://semver.org)
 [![version](https://img.shields.io/badge/MongoDB-latest-green)](https://semver.org)
 [![version](https://img.shields.io/badge/Tomcat-9.0.5-yellow)](https://semver.org)
@@ -12,7 +12,8 @@
 ## Quick start ⚡
 - [Application Diagram](#application-architecture-in-diagram)
 - [For Developers](#instructions-for-developers-how-to-run-project-locally)
-- [Run in Production](#instructions-how-to-deploy-project-in-production-or-stage)
+- [Run in Stage](#instructions-how-to-deploy-project-in-stage)
+- [Run in Production](#instructions-how-to-deploy-project-in-production)
 - [Partners](#partners-)
 
 ## General info
@@ -55,6 +56,12 @@ MONGO_CONTAINER_NAME="mongodb"
 
 # Redis credentials
 REDIS_CONTAINER_NAME="redis"
+
+# APP Ports
+PG_PORT=5432
+REDIS_PORT=6379
+MONGO_PORT=27017
+TOM_PORT=8080
 ```
 
 ### Export variables from .env 
@@ -87,7 +94,7 @@ docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES O
 docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $USER_NAME;"
 ```
 
-4. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
+3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
 ```text
 hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:5432/schedule
 ```
@@ -124,7 +131,22 @@ docker run -d --network schedule_network \
     -p $BACKEND_PORT:$BACKEND_PORT tom_app_img
 ```
 ------------------------------------------
-# Instructions how to deploy Project in Production or Stage
+# Instructions how to deploy Project in Stage
+
+## For deploying this application  run this simple commands (on VM or Remote Server):
+1. ### Clone repository
+```shell
+git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
+```
+
+2. Step
+3. 
+4. step 4
+
+
+
+---------------------------------------------------------------------------------
+# Instructions how to deploy Project in Production
 
 ## For deploying this application  run this simple commands (on VM or Remote Server):
 ### Clone repository
