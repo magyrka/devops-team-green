@@ -1,0 +1,96 @@
+version: '3.8'
+services:
+
+  postgresql:
+    env_file:
+      - .env
+    image: postgres:14
+    container_name: ${PG_CONTAINER_NAME}
+
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: ${USER_NAME}
+      POSTGRES_PASSWORD: ${USER_PASS}
+      POSTGRES_DB: ${PG_DB_NAME}
+    command:
+      - psql -U ${USER_NAME} -c "GRANT ALL PRIVILEGES ON DATABASE ${PG_DB_NAME} TO ${USER_NAME};"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      my_java_app:
+
+
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        - PG_PORT_TEST=${PG_PORT_TEST}
+        - IP_PG_TEST=${IP_PG_TEST}
+        - PG_PASSWORD=${PG_PASSWORD}
+    env_file:
+      - .env
+    environment:
+      - PG_CONTAINER_NAME=${PG_CONTAINER_NAME}
+      - PG_DB_NAME=${PG_DB_NAME}
+      - PG_DB_NAME_TEST=${PG_DB_NAME_TEST}
+      - USER_NAME=${USER_NAME}
+      - USER_PASS=${USER_PASS}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_CONTAINER_NAME=${MONGO_CONTAINER_NAME}
+      - REDIS_CONTAINER_NAME=${REDIS_CONTAINER_NAME}
+    container_name: backend-tomcat
+    depends_on:
+      - postgresql
+#    command:
+#     - ./gradlew tests
+#     - rm -rf /gradleW /dir
+    ports:
+      - "8080:8080"
+    networks:
+      - my_java_app
+
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      my_java_app:
+#        ipv4_address: ${IP_REDIS}
+
+  mongodb:
+    env_file:
+      - .env
+    image: mongo:jammy
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+      - MONGO_INITDB_USER=mongodb
+      - MONGO_INITDB_PWD=mongodb
+    command:
+      - use ${MONGO_DB_NAME}
+#      - db.user.insertOne({name: "Vitaliy Kost", age: 205})
+    networks:
+      - my_java_app
+
+networks:
+  my_java_app:
+    name: green_team
+    labels:
+      Author: 'Vitaliy K'
+    ipam:
+      driver: default
+#      config:
+#        - subnet:    ${IP_SUBNET}
+#          ip_range:
+#          gateway:   192.168.102.7

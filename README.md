@@ -134,7 +134,7 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 
 ### Run Docker compose file to start app
 ```shell
-docker compose up -d -f docker-compose.prod.yaml
+docker compose -f docker-compose.prod.yaml up -d
 ```
 ---------------------------------------
 # Partners ❤️
