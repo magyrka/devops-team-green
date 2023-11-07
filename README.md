@@ -40,28 +40,21 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 
 ### Creating Your .env File with variables
 ```dotenv
-FRONTEND_PORT=3000
-BACKEND_PORT=8080
-REDIS_PORT=6379
-MONGO_PORT=27017
-PG_PORT=5432
+# Postgresql credentials 
+PG_CONTAINER_NAME=postgresql
+PG_DB_NAME=schedule
+PG_DB_NAME_TEST=schedule_test
+USER_NAME=schedule
+USER_PASS=
+PG_DUMP_FILE='backup/2023-09-07.dump' 
 
-PG_PASSWORD=
-DB_NAME=schedule
-PG_USER=schedule
-PG_DUMP_FILE='backup/2023-09-07.dump'
 
-MONGO_DB_NAME=schedules
-MONGO_CONTAINER_NAME=mongo_container
-PG_CONTAINER_NAME=pg_container
-REDIS_CONTAINER_NAME=redis_container
-TOM_CONTAINER_NAME=tomcat_container
+# Mongo credentials
+MONGO_DB_NAME="schedules"
+MONGO_CONTAINER_NAME="mongodb"
 
-IP_SUBNET='192.168.100.0/28'
-IP_PG='192.168.100.2'
-IP_REDIS='192.168.100.3'
-IP_MONGO='192.168.100.4'
-IP_TOMCAT='192.168.100.5'
+# Redis credentials
+REDIS_CONTAINER_NAME="redis"
 ```
 
 ### Export variables from .env 
@@ -71,7 +64,7 @@ source .env
 
 ### Create docker network
 ```shell
-docker network create --driver bridge --subnet $IP_SUBNET schedule_network
+docker network create --driver bridge schedule_network
 ```
 
 ## Database PostgresQL
@@ -79,22 +72,24 @@ docker network create --driver bridge --subnet $IP_SUBNET schedule_network
 ```shell
 docker run -d --name $PG_CONTAINER_NAME \
 	--network schedule_network \
-	--ip $IP_PG \
 	-v postgres-data:/var/lib/postgresql/data \
-	-e POSTGRES_PASSWORD=$PG_PASSWORD \
-	-e POSTGRES_DB=$DB_NAME \
-	-e POSTGRES_USER=$PG_USER \
+	-e POSTGRES_PASSWORD=$USER_PASS \
+	-e POSTGRES_DB=$PG_DB_NAME \
+	-e POSTGRES_USER=$USER_NAME \
 	-p 5432:5432 postgres:14
 ```
 2. Restore PG data from file
 ```shell
 docker cp $PG_DUMP_FILE $PG_CONTAINER_NAME:/tmp/backup.dump
-docker exec -it $PG_CONTAINER_NAME psql -U $PG_USER -d $DB_NAME -f /tmp/backup.dump
-docker exec -it $PG_CONTAINER_NAME psql -U $PG_USER -d $DB_NAME -c "CREATE DATABASE ${DB_NAME}_test WITH OWNER $PG_USER"
+docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -d $PG_DB_NAME -f /tmp/backup.dump
+docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "CREATE DATABASE $PG_DB_NAME_TEST WITH OWNER $USER_NAME"
+docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $USER_NAME;"
+docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $USER_NAME;"
 ```
-3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
+
+4. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
 ```text
-hibernate.connection.url=jdbc:postgresql://${IP_PG}:${PG_PORT}/schedule
+hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:5432/schedule
 ```
 ## Database Redis
 1. Start the latest version of Redis in Docker container   
@@ -102,13 +97,11 @@ hibernate.connection.url=jdbc:postgresql://${IP_PG}:${PG_PORT}/schedule
 docker volume create redis-data
 docker run -d --network schedule_network \
    --name $REDIS_CONTAINER_NAME \
-   --ip $IP_REDIS \
-   -v redis-data:/data \
-   -p $REDIS_PORT:$REDIS_PORT redis 
+   -v redis-data:/data redis 
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
-redis.address = redis://${IP_REDIS}:${REDIS_PORT}
+redis.address = redis://${REDIS_CONTAINER_NAME}:${REDIS_PORT}
 ```
 
 ## Starting backend server using IntelliJ IDEA and Tomcat
@@ -125,10 +118,9 @@ redis.address = redis://${IP_REDIS}:${REDIS_PORT}
 
 ## (Optionally) Run TomCat App in Docker container
 ```shell
-docker build -t tom_app_img .
+docker build -t tom_app_img --progress plain --no-cache .
 docker run -d --network schedule_network \
     --name $TOM_CONTAINER_NAME \
-    --ip $IP_TOMCAT \
     -p $BACKEND_PORT:$BACKEND_PORT tom_app_img
 ```
 ------------------------------------------
