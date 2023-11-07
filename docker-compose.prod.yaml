@@ -14,15 +14,15 @@ services:
       POSTGRES_USER: ${USER_NAME}
       POSTGRES_PASSWORD: ${USER_PASS}
       POSTGRES_DB: ${PG_DB_NAME}
-    command:
-      - psql -U ${USER_NAME} -c "GRANT ALL PRIVILEGES ON DATABASE ${PG_DB_NAME} TO ${USER_NAME};"
+#    command:
+#      - psql -U ${USER_NAME} -c "GRANT ALL PRIVILEGES ON DATABASE ${PG_DB_NAME} TO ${USER_NAME};"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - PG_DUMP_FILE:/tmp/backup.dump
+#    volumes:
+#      - $PG_DUMP_FILE:/tmp/backup.dump
     networks:
       my_java_app:
 
@@ -32,8 +32,8 @@ services:
       context: .
       dockerfile: dockerfile
       args:
-        - PG_PORT_TEST=${PG_PORT_TEST}
-        - PG_PASSWORD=${PG_PASSWORD}
+        - PG_PORT_TEST=${PG_PORT}
+        - PG_PASSWORD=${USER_PASS}
     env_file:
       - .env
     environment:
@@ -78,8 +78,8 @@ services:
       - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
       - MONGO_INITDB_USER=mongodb
       - MONGO_INITDB_PWD=mongodb
-    command:
-      - use ${MONGO_DB_NAME}
+#    command:
+#      - use ${MONGO_DB_NAME}
 #      - db.user.insertOne({name: "Vitaliy Kost", age: 205})
     networks:
       - my_java_app
