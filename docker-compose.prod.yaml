@@ -41,7 +41,7 @@ services:
     depends_on:
       - postgresql
     ports:
-      - "${TOM_PORT}:${TOM_PORT}"
+      - "${TOM_PORT}:8080"
     networks:
       - my_java_app
 
