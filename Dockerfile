@@ -12,6 +12,8 @@ COPY . /java-app/
 COPY --from=frontend_build /react-app/build/assets /java-app/src/main/webapp/assets
 COPY --from=frontend_build /react-app/build/static /java-app/src/main/webapp/static
 COPY --from=frontend_build /react-app/build/. /java-app/src/main/webapp/WEB-INF/view
+RUN rm -rf /java-app/src/main/webapp/WEB-INF/view/assets \
+    && rm -rf /java-app/src/main/webapp/WEB-INF/view/static
 RUN gradle build -x test
 
 # Stage 3: Deploy war on Tomcat9
