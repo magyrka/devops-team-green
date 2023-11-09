@@ -11,8 +11,8 @@ services:
       POSTGRES_USER: ${USER_NAME}
       POSTGRES_PASSWORD: ${USER_PASS}
       POSTGRES_DB: ${PG_DB_NAME}
-    volumes:
-      - /var/lib/docker/postgres_data:/var/lib/postgresql/data
+#    volumes:
+#      - /var/lib/docker/postgres_data:/var/lib/postgresql/data
 #      - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
