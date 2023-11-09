@@ -49,6 +49,8 @@ USER_NAME=schedule
 USER_PASS=
 PG_DUMP_FILE='backup/2023-09-07.dump' 
 
+PG_TEST_CONTAINER=
+PG_TEST_PORT=
 
 # Mongo credentials
 MONGO_DB_NAME="schedules"
@@ -113,7 +115,7 @@ docker run -d --network schedule_network \
 1. Start the latest version of Redis in Docker container   
 ```shell
 docker run -d --network schedule_network \
-   --name $REDIS_CONTAINER_NAME redis 
+   --name $REDIS_CONTAINER_NAME redis  
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
