@@ -75,6 +75,4 @@ networks:
 
 volumes:
   postgres_data:
-    external: true
   mongo_data:
-    external: true
