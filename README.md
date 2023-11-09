@@ -77,13 +77,14 @@ docker network create --driver bridge schedule_network
 ## Database PostgresQL
 1. Run this simple commands to Start version 14 of PostgreSQL in Docker container
 ```shell
+docker volume create postgres-data
 docker run -d --name $PG_CONTAINER_NAME \
 	--network schedule_network \
 	-v postgres-data:/var/lib/postgresql/data \
 	-e POSTGRES_PASSWORD=$USER_PASS \
 	-e POSTGRES_DB=$PG_DB_NAME \
 	-e POSTGRES_USER=$USER_NAME \
-	-p 5432:5432 postgres:14
+	-p $PG_PORT:5432 postgres:14
 ```
 2. Restore PG data from file
 ```shell
@@ -96,15 +97,21 @@ docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES O
 
 3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
 ```text
-hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:5432/schedule
+hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:${PG_PORT}/${PG_DB_NAME}
 ```
+
+## Database MongoDB
+1. Start Mondo DB latest version vith env variables:
+```shell
+docker run -d --network schedule_network \
+   --name $MONGO_CONTAINER_NAME mongo 
+```
+
 ## Database Redis
 1. Start the latest version of Redis in Docker container   
 ```shell
-docker volume create redis-data
 docker run -d --network schedule_network \
-   --name $REDIS_CONTAINER_NAME \
-   -v redis-data:/data redis 
+   --name $REDIS_CONTAINER_NAME redis 
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
@@ -123,13 +130,7 @@ redis.address = redis://${REDIS_CONTAINER_NAME}:${REDIS_PORT}
 9. Press OK to save the configuration
 10. `Run –>> Run 'Tomcat 9.0.50'` to start the backend server
 
-## (Optionally) Run TomCat App in Docker container
-```shell
-docker build -t tom_app_img --progress plain --no-cache .
-docker run -d --network schedule_network \
-    --name $TOM_CONTAINER_NAME \
-    -p $BACKEND_PORT:$BACKEND_PORT tom_app_img
-```
+
 ------------------------------------------
 # Instructions how to deploy Project in Stage
 
@@ -139,10 +140,15 @@ docker run -d --network schedule_network \
 git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 ```
 
-2. Step
-3. 
-4. step 4
-
+2. Start Running Databases (Redis, PostgeSQL, Mongo) in Docker container, using same instruction, 
+  from previous part [for Developers](#instructions-for-developers-how-to-run-project-locally)
+3. Run TomCat App in Docker container
+```shell
+docker build -t tom_app_img --progress plain --no-cache .
+docker run -d --network schedule_network \
+    --name $TOM_CONTAINER_NAME \
+    -p $BACKEND_PORT:8080 tom_app_img
+```
 
 
 ---------------------------------------------------------------------------------
