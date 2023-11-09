@@ -84,7 +84,6 @@ docker run -d --name $PG_CONTAINER_NAME \
 	-e POSTGRES_DB=$PG_DB_NAME \
 	-e POSTGRES_USER=$USER_NAME \
 	postgres:14-alpine
-	# -p $PG_PORT:5432 postgres:14-alpine
 ```
 2. Restore PG data from file
 ```shell
