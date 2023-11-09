@@ -11,7 +11,8 @@ services:
       POSTGRES_USER: ${USER_NAME}
       POSTGRES_PASSWORD: ${USER_PASS}
       POSTGRES_DB: ${PG_DB_NAME}
-#    volumes:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 #      - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
@@ -19,7 +20,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      my_java_app:
+      java_app_network:
 
 
   backend:
@@ -45,17 +46,18 @@ services:
     networks:
       - my_java_app
 
-
   redis:
     image: redis:alpine
     networks:
-      my_java_app:
+      java_app_network:
 
   mongodb:
     env_file:
       - .env
     image: mongo:jammy
     container_name: mongo-db
+    volumes:
+      - mongo_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
@@ -63,12 +65,16 @@ services:
       - MONGO_INITDB_USER=mongodb
       - MONGO_INITDB_PWD=mongodb
     networks:
-      - my_java_app
+      java_app_network:
 
 networks:
-  my_java_app:
+  java_app_network:
     name: green_team
     labels:
       Author: 'Vitaliy K'
-    ipam:
-      driver: default
+
+volumes:
+  postgres_data:
+    external: true
+  mongo_data:
+    external: true

@@ -101,10 +101,12 @@ hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:${PG_PORT}/${PG_
 ```
 
 ## Database MongoDB
-1. Start Mondo DB latest version vith env variables:
+1. Start Mondo DB latest version with env variables:
 ```shell
+docker volume create mongo_data_volume
 docker run -d --network schedule_network \
-   --name $MONGO_CONTAINER_NAME mongo 
+   --name $MONGO_CONTAINER_NAME \
+   -v mongo_data_volume:/data/db mongo 
 ```
 
 ## Database Redis
@@ -134,7 +136,7 @@ redis.address = redis://${REDIS_CONTAINER_NAME}:${REDIS_PORT}
 ------------------------------------------
 # Instructions how to deploy Project in Stage
 
-## For deploying this application  run this simple commands (on VM or Remote Server):
+## For deploying this application run this simple commands (on VM or Remote Server):
 1. ### Clone repository
 ```shell
 git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
