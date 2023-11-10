@@ -1,0 +1,78 @@
+version: '3.8'
+services:
+
+  postgresql:
+    env_file:
+      - .env
+    image: postgres:14
+    container_name: ${PG_CONTAINER_NAME}
+    restart: always
+    environment:
+      POSTGRES_USER: ${USER_NAME}
+      POSTGRES_PASSWORD: ${USER_PASS}
+      POSTGRES_DB: ${PG_DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+#      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      java_app_network:
+
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PG_CONTAINER_NAME=${PG_CONTAINER_NAME}
+      - PG_DB_NAME=${PG_DB_NAME}
+      - PG_DB_NAME_TEST=${PG_DB_NAME_TEST}
+      - USER_NAME=${USER_NAME}
+      - USER_PASS=${USER_PASS}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_CONTAINER_NAME=${MONGO_CONTAINER_NAME}
+      - REDIS_CONTAINER_NAME=${REDIS_CONTAINER_NAME}
+    container_name: backend-tomcat
+    depends_on:
+      - postgresql
+    ports:
+      - "${TOM_PORT}:8080"
+    networks:
+      - java_app_network
+
+  redis:
+    image: redis:alpine
+    networks:
+      java_app_network:
+
+  mongodb:
+    env_file:
+      - .env
+    image: mongo:jammy
+    container_name: mongo-db
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+      - MONGO_INITDB_USER=mongodb
+      - MONGO_INITDB_PWD=mongodb
+    networks:
+      java_app_network:
+
+networks:
+  java_app_network:
+    name: green_team
+    labels:
+      Author: 'Vitaliy K'
+
+volumes:
+  postgres_data:
+  mongo_data:
