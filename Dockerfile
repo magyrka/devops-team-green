@@ -1,4 +1,4 @@
-# Stage 1: Build frontend files
+# Stage 1: Build frontend files 
 FROM node:20-alpine AS frontend_build
 WORKDIR /react-app/
 COPY frontend /react-app/
@@ -21,5 +21,4 @@ FROM tomcat:9-jre11
 COPY --from=gradle_build /java-app/build/libs/class_schedule.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
-
 CMD ["catalina.sh", "run"]
