@@ -176,5 +176,5 @@ docker compose -f docker-compose.prod.yaml up -d
    - Vitaliy Kostyreva 
    - Vladyslav Ivanskiy
    - Valentyn Stratii
-   - Liza Voievutska (Network support specialist)
+   - Liza Voievutska
    - Roman Hirnyak
