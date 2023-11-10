@@ -1,10 +1,10 @@
 
 [![version](https://img.shields.io/badge/Ubuntu-20.04-brown)](https://semver.org)
-[![version](https://img.shields.io/badge/NodeJS-14-green)](https://semver.org)
+[![version](https://img.shields.io/badge/NodeJS-20-green)](https://semver.org)
 [![version](https://img.shields.io/badge/JAVA-11-green)](https://semver.org)
 [![version](https://img.shields.io/badge/Posrgres-14-blue)](https://semver.org)
-[![version](https://img.shields.io/badge/Redis-latest-red)](https://semver.org)
-[![version](https://img.shields.io/badge/MongoDB-latest-green)](https://semver.org)
+[![version](https://img.shields.io/badge/Redis-7-red)](https://semver.org)
+[![version](https://img.shields.io/badge/MongoDB-7-green)](https://semver.org)
 [![version](https://img.shields.io/badge/Tomcat-9.0.5-yellow)](https://semver.org)
 
 
@@ -28,7 +28,7 @@ Link to the development version of the site: https://develop-softserve.herokuapp
 
 ------------------------------------------
 # Instructions for Developers (how to run Project locally)
-Assuming that all commands will be running in shell from working directory and DockerCLI is installed
+Assuming that all commands will be running in shell from working directory and [DockerCLI](https://docs.docker.com/engine/install/) is installed
 ## Clone repository locally from Git
 In order to create a local copy of the project you need:
 1. Download and install the last version of Git https://git-scm.com/downloads
@@ -37,7 +37,6 @@ In order to create a local copy of the project you need:
 ```shell
 git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 ```
-4. Enter your username and password if GitLab requests.
 
 ### Creating Your .env File with variables
 ```dotenv
@@ -49,15 +48,13 @@ USER_NAME=schedule
 USER_PASS=
 PG_DUMP_FILE='backup/2023-09-07.dump' 
 
-PG_TEST_CONTAINER=
-PG_TEST_PORT=
 
 # Mongo credentials
-MONGO_DB_NAME="schedules"
-MONGO_CONTAINER_NAME="mongodb"
+MONGO_DB_NAME=schedules
+MONGO_CONTAINER_NAME=mongodb
 
 # Redis credentials
-REDIS_CONTAINER_NAME="redis"
+REDIS_CONTAINER_NAME=redis
 
 # APP Ports
 PG_PORT=5432
@@ -76,7 +73,7 @@ source .env
 docker network create --driver bridge schedule_network
 ```
 
-## Database PostgresQL
+## Database PostgreSQL
 1. Run this simple commands to Start version 14 of PostgreSQL in Docker container
 ```shell
 docker volume create postgres-data
@@ -86,7 +83,7 @@ docker run -d --name $PG_CONTAINER_NAME \
 	-e POSTGRES_PASSWORD=$USER_PASS \
 	-e POSTGRES_DB=$PG_DB_NAME \
 	-e POSTGRES_USER=$USER_NAME \
-	-p $PG_PORT:5432 postgres:14
+	postgres:14-alpine
 ```
 2. Restore PG data from file
 ```shell
@@ -105,17 +102,17 @@ hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:${PG_PORT}/${PG_
 ## Database MongoDB
 1. Start Mondo DB latest version with env variables:
 ```shell
-docker volume create mongo_data_volume
+docker volume create mongo-data
 docker run -d --network schedule_network \
    --name $MONGO_CONTAINER_NAME \
-   -v mongo_data_volume:/data/db mongo 
+   -v mongo-data:/data/db mongo:7.0-rc-jammy
 ```
 
 ## Database Redis
 1. Start the latest version of Redis in Docker container   
 ```shell
 docker run -d --network schedule_network \
-   --name $REDIS_CONTAINER_NAME redis  
+   --name $REDIS_CONTAINER_NAME redis:7-alpine
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
@@ -148,10 +145,11 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
   from previous part [for Developers](#instructions-for-developers-how-to-run-project-locally)
 3. Run TomCat App in Docker container
 ```shell
-docker build -t tom_app_img --progress plain --no-cache .
+docker build -t schedule_app_img --progress plain --no-cache .
 docker run -d --network schedule_network \
-    --name $TOM_CONTAINER_NAME \
-    -p $BACKEND_PORT:8080 tom_app_img
+    --env-file .env \
+    --name schedule_app \
+    -p $TOM_PORT:8080 schedule_app_img
 ```
 
 
@@ -176,7 +174,7 @@ docker compose -f docker-compose.prod.yaml up -d
    - Backend team (incognito)
 - Devops Team:
    - Vitaliy Kostyreva 
-   - Vladyslav Manjirka
-   - Valentyn Stratji
+   - Vladyslav Ivanskiy
+   - Valentyn Stratii
    - Liza Voievutska (Network support specialist)
    - Roman Hirnyak

@@ -11,8 +11,8 @@ services:
       POSTGRES_USER: ${USER_NAME}
       POSTGRES_PASSWORD: ${USER_PASS}
       POSTGRES_DB: ${PG_DB_NAME}
-#    volumes:
-#      - /var/lib/docker/postgres_data:/var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 #      - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${PG_DB_NAME} -U $${USER_NAME}" ]
@@ -56,8 +56,8 @@ services:
       - .env
     image: mongo:jammy
     container_name: mongo-db
-#    volumes:
-#      - mongo_data:/data/db
+    volumes:
+      - mongo_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
@@ -73,6 +73,6 @@ networks:
     labels:
       Author: 'Vitaliy K'
 
-#volumes:
-#  postgres_data:
-#  mongo_data:
+volumes:
+  postgres_data:
+  mongo_data:
