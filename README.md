@@ -6,7 +6,8 @@
 [![version](https://img.shields.io/badge/Redis-7-red)](https://semver.org)
 [![version](https://img.shields.io/badge/MongoDB-7-green)](https://semver.org)
 [![version](https://img.shields.io/badge/Tomcat-9.0.5-yellow)](https://semver.org)
-
+<br>
+[![Build Status](http://78.27.236.114:8080/buildStatus/icon?job=prod-app-java-job)](http://78.27.236.114:8080/job/prod-app-java-job/)
 
 # Class schedule
 ## Quick start ⚡
