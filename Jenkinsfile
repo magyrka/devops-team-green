@@ -8,7 +8,6 @@ pipeline {
         PG_DUMP_FILE = "backup/2023-09-07.dump"
         PG_CONTAINER_NAME = "postgresql"
         PG_DB_NAME = "schedule"
-        PG_DB_NAME_TEST = "postgres"
         USER_NAME = "$POSTGRES_CREDS_USR"
         USER_PASS = "$POSTGRES_CREDS_PSW"
         // mongo
@@ -50,9 +49,6 @@ pipeline {
 
 
         stage('Test') {
-            environment {
-                PG_CONTAINER_NAME = "localhost"
-            }
             steps {
                 sh 'docker run -d --name postgresql_test \
                     -e POSTGRES_USER=$USER_NAME \
