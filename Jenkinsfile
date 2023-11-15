@@ -20,7 +20,7 @@ pipeline {
         PG_PORT = 5432
         REDIS_PORT = 6379
         MONGO_PORT = 27017
-        TOM_PORT = 8080
+        TOM_PORT = 8082
     }
 
     stages {
