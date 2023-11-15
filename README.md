@@ -43,7 +43,6 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 # Postgresql credentials 
 PG_CONTAINER_NAME=postgresql
 PG_DB_NAME=schedule
-PG_DB_NAME_TEST=schedule_test
 USER_NAME=schedule
 USER_PASS=
 PG_DUMP_FILE='backup/2023-09-07.dump' 
