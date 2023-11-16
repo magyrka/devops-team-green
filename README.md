@@ -8,7 +8,7 @@
 [![version](https://img.shields.io/badge/Tomcat-9.0.5-yellow)](https://semver.org)
 
 
-# Class schedule
+# Class scheduleіі
 ## Quick start ⚡
 - [Application Diagram](#application-architecture-in-diagram)
 - [For Developers](#instructions-for-developers-how-to-run-project-locally)
