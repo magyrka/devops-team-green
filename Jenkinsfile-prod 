@@ -1,0 +1,67 @@
+    pipeline {
+    agent any
+    
+    environment {
+            DOCKER_COMPOSE_FILE = 'docker-compose.prod.yaml'
+            PG_CONTAINER_NAME = "postgresql"
+            PG_DB_NAME = "schedule"
+            PG_DB_NAME_TEST = "postgres"
+            POSTGRESQL_COMMON_CREDS = credentials('jenkins-postgres-common-creds')
+            USER_NAME = "$POSTGRESQL_COMMON_CREDS_USR"
+            USER_PASS = "$POSTGRESQL_COMMON_CREDS_PSW"
+            MONGO_DB_NAME = "mongodb"
+            MONGO_CONTAINER_NAME = "mongodb"
+            REDIS_CONTAINER_NAME = "redis"
+            PG_PORT = 5432
+            REDIS_PORT = 6379
+            MONGO_PORT = 27017
+            TOM_PORT = 8082
+        }
+        
+        stages {
+            stage('Checkout') {
+                environment {
+                    GIT_REPO_URL = 'git@github.com:magyrka/devops-team-green-2.git'
+                    GIT_CREDENTIALS_ID = 'jenkins-ssh-key-id'
+                }
+                steps {
+                    git branch: 'main', credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO_URL}"
+                }
+            }    
+
+            stage('Test') {
+                steps {
+                    sh 'docker run -d --name postgresql_test \
+                        -e POSTGRES_USER=$USER_NAME \
+                        -e POSTGRES_PASSWORD=$USER_PASS \
+                        -p $PG_PORT:$PG_PORT postgres:14-alpine'
+                    sh 'docker run -d --name mongodb_test \
+                        -p $MONGO_PORT:$MONGO_PORT \
+                        mongo:7.0-rc-jammy'
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew test'
+                }
+            post {
+                always {
+                    sh 'docker stop postgresql_test mongodb_test'
+                    sh 'docker rm postgresql_test mongodb_test'
+                }
+            }
+            }
+
+            stage('Build') {
+                steps {
+                    sh "mv .env-sample .env"
+                    sh "sed -i \"s/USER_NAME=.*/USER_NAME=\${POSTGRESQL_COMMON_CREDS_USR}/\" .env"
+                    sh "sed -i \"s/USER_PASS=.*/USER_PASS=\${POSTGRESQL_COMMON_CREDS_PSW}/\" .env"
+                    sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d"
+                }
+            }
+        }
+
+        post {
+            cleanup {
+                cleanWs()
+            }
+        }
+    }    
