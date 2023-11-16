@@ -35,7 +35,7 @@ In order to create a local copy of the project you need:
 2. Open a terminal and go to the directory where you want to clone the files. 
 3. Run the following command. Git automatically creates a folder with the repository name and downloads the files there.
 ```shell
-git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
+git clone https://github.com/DTG-cisco/devops-team-green-2 && cd devops-team-green/
 ```
 
 ### Creating Your .env File with variables
@@ -138,7 +138,7 @@ redis.address = redis://${REDIS_CONTAINER_NAME}:${REDIS_PORT}
 ## For deploying this application run this simple commands (on VM or Remote Server):
 1. ### Clone repository
 ```shell
-git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
+git clone https://github.com/DTG-cisco/devops-team-green-2 && cd devops-team-green/
 ```
 
 2. Start Running Databases (Redis, PostgeSQL, Mongo) in Docker container, using same instruction, 
@@ -159,7 +159,7 @@ docker run -d --network schedule_network \
 ## For deploying this application  run this simple commands (on VM or Remote Server):
 ### Clone repository
 ```shell
-git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
+git clone https://github.com/DTG-cisco/devops-team-green-2 && cd devops-team-green/
 ```
 
 ### Run Docker compose file to start app
