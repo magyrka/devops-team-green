@@ -36,7 +36,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    def gitRepoUrl = 'git@github.com:magyrka/devops-team-green-2.git'
+                    def gitRepoUrl = 'git@github.com:DTG-cisco/devops-team-green-2.git'
                     def gitBranch = 'Staging'
                     def gitCredentialsId = 'schedule-github-ssh'
 
