@@ -1,0 +1,58 @@
+---
+- name: Install Mongo DB
+  hosts: "{{ HOST_IP }}"
+  become: yes
+
+  tasks:
+    - name: Install needed apps for Mongo
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - lsb-release
+        - curl
+        - gnupg
+
+    - name: Create sources.list.d directory
+      file:
+        path: /etc/apt/sources.list.d
+        state: directory
+
+    - name: Add an Apt signing key to a specific keyring file
+      ansible.builtin.apt_key:
+        url:     https://pgp.mongodb.com/server-7.0.asc
+        keyring: /usr/share/keyrings/mongodb-server-7.0.gpg
+# shell: curl -fsSL https://pgp.mongodb.com/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+
+    - name: Add Mongo repository to sources.list
+      apt_repository:
+        repo: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/7.0 multiverse"
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install MongoDB
+      apt:
+        name: mongodb-org
+        state: present
+      notify:
+        - Enable Mongo
+        - Start Mongo
+
+  handlers:
+  - name: Start Mongo
+    systemd:
+      name: mongod
+      state: started
+
+  - name: Stop Mongo
+    systemd:
+      name: mongod
+      state: stopped
+
+  - name: Enable Mongo
+    systemd:
+      name: mongod
+      enabled: yes

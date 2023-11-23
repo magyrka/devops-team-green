@@ -1,0 +1,38 @@
+---
+- name: Run Application in Docker TOM
+  hosts:
+    - "{{ HOST_IP }}"
+  become: true
+  vars:
+    APP_IMAGE_TAG: latest
+
+  tasks:
+    - name: Ping server - Check Connection
+      ping:
+
+    - name: Pull Docker image
+      docker_image:
+        name: "{{ APP_IMAGE }}"
+        source: pull
+
+    - name: Run Tomcat container
+      docker_container:
+        name: app_container
+        image: "{{ APP_IMAGE }}"
+        state: started
+        ports:
+          - "8080:8080"
+        env:
+          PG_CONTAINER_NAME: "{{ PG_CONTAINER_NAME }}"
+          USER_NAME: "{{ USER_NAME }}"
+          USER_PASS: "{{ USER_PASS }}"
+          PG_PORT:   "{{ PG_PORT }}"
+          PG_DB_NAME: "{{ PG_DB_NAME }}"
+
+
+#    - name: Build Docker image with Git commit hash tag
+#      docker_image:
+#        build:
+#          path: /path/to/your/app
+#        name: your_image_name:{{ commit_hash.stdout | trim }}
+#        pull: no  # build from the Dockerfile

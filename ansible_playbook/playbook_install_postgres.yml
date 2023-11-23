@@ -1,0 +1,100 @@
+---
+- name: Install PostgreSQL and configure databases
+  hosts: Databases
+  become: yes
+  collections: ["community.postgresql"]
+
+  tasks:
+    - name: Create directory for pgdg
+      file:
+        path: /usr/share/postgresql-common/pgdg
+        state: directory
+
+    - name: Download apt.postgresql.org.asc
+      get_url:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+
+    - name: Add PostgreSQL apt repository
+      apt_repository:
+        repo: "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install PostgreSQL & acl
+      apt:
+        name:
+          - "postgresql-{{ PG_VERSION }}"
+          - acl
+        state: present
+
+    - name: Enable PostgreSQL at startup (systemd)
+      systemd:
+        name: postgresql
+        enabled: yes
+      when:
+        - ansible_service_mgr == "systemd"
+
+    - name: Start PostgreSQL service
+      service:
+        name: postgresql
+        state: started
+
+    - name: Install Python Pip
+      apt: name={{ item }} update_cache=yes force_apt_get=yes cache_valid_time=3600
+      with_items:
+      # - python-pip
+        - python3-pip
+      become: true
+
+    - name: Install Python Package
+      pip:
+        name: psycopg2-binary
+        state: present
+
+    - name: Create PostgreSQL user, set password, grant privs
+      become_user: postgres
+      community.postgresql.postgresql_user:
+        name: "{{ PG_USER }}"
+        role_attr_flags:  CREATEDB # SUPERUSER,
+        password: "{{ PG_PASSWORD }}"
+#        encrypted: yes
+
+    - name: Create new test database
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        name: schedule_test
+        owner: "{{ PG_USER }}"
+
+    - name: Create new database for APP (schedule)
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        name: "{{ PG_DB }}"
+        owner: "{{ PG_USER }}"
+
+    - name: Grant all privileges on a PostgreSQL database to a user
+      become_user: postgres
+      shell: "psql -c 'GRANT ALL PRIVILEGES ON DATABASE {{ PG_DB }} TO {{ PG_USER }};'"
+
+    - name: Grant all privileges on a PostgreSQL Test database to a user
+      become_user: postgres
+      shell: "psql -c 'GRANT ALL PRIVILEGES ON DATABASE schedule_test TO {{ PG_USER }};'"
+
+
+#    - name: Grant privileges on a PostgreSQL database
+#      become_user: postgres
+#      community.postgresql.postgresql_privs:
+#        db: postgres
+#        role: "{{ PG_USER }}"
+#        obj:
+#          - "{{ PG_DB }}"
+#          - schedule_test
+#        privs: ALL
+#        state: present
+
+#    - name: Restore data from dump file
+#      command: psql -U "{{ PG_USER }}" -d "{{ PG_DB }}" -f /home/ubuntu/2023.dump
+
