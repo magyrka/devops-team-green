@@ -1,6 +1,8 @@
 ---
 - name: Install PostgreSQL and configure databases
-  hosts: Databases
+  hosts: 
+    - Postgres_DB
+    - "{{ HOST_IP }}"
   become: yes
   collections: ["community.postgresql"]
 
