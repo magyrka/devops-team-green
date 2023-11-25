@@ -1,0 +1,32 @@
+---
+- name: Build and Push Docker image to Docker Hub
+  hosts: "{{ HOST_IP }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Ensure Git is installed
+      package:
+        name: git
+        state: present
+
+    - name: Clone the repository
+      git:
+        repo: "{{ GIT_URL }}"
+        dest: "/opt/java-app"
+
+    - name: Log into DockerHub
+      docker_login:
+        username: "{{ DH_USERNAME }}"
+        password: "{{ DH_PASSWORD }}"
+
+    - name: Build and Push Docker image to Docker Hub
+      docker_image:
+        name: "schedule-app"
+        tag: "latest"
+        repository: "{{ DH_REPO }}"
+        build:
+          path: "/opt/java-app"
+        push: true
+        force_tag: true
+        source: build
