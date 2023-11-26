@@ -5,15 +5,6 @@
   vars:
     APP_PATH: "/opt/java-app"
     GIT_REPO: "{{ GIT_REPO }}"
-    PG_CONTAINER_NAME: "postgresql"
-    USER_NAME: "{{ USER_NAME }}"
-    USER_PASS: "{{ USER_PASS }}"
-    PG_DB_NAME: "schedule"
-    DH_REPO: "{{ DH_REPO }}"
-    TOM_PORT: "8080"
-    MONGO_DB_NAME: "schedules"
-    MONGO_CONTAINER_NAME: "mongodb"
-    REDIS_CONTAINER_NAME: "redis"
 
   tasks:
     - name: Ping server - Check Connection
@@ -39,6 +30,15 @@
       docker_compose:
         project_src: "{{ APP_PATH }}"
       register: output
+      environment: 
+          PG_CONTAINER_NAME: "postgresql"
+          USER_NAME: "{{ PG_USERNAME }}"
+          USER_PASS: "{{ PG_PASSWORD }}"
+          PG_DB_NAME: "schedule"
+          DH_REPO: "{{ DH_REPO }}"
+          MONGO_DB_NAME: "schedules"
+          MONGO_CONTAINER_NAME: "mongodb"
+          REDIS_CONTAINER_NAME: "redis"
 
     - name: Show results
       ansible.builtin.debug:
