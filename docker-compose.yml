@@ -32,6 +32,8 @@ services:
       - MONGO_CONTAINER_NAME=${MONGO_CONTAINER_NAME}
       - REDIS_CONTAINER_NAME=${REDIS_CONTAINER_NAME}
       - PG_PORT=5432
+      - MONGO_PORT=27017
+      - REDIS_PORT=6379
     container_name: backend-tomcat
     depends_on:
       - postgresql
