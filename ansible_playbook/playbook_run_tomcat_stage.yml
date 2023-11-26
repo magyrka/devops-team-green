@@ -9,6 +9,11 @@
     - name: Ping server - Check Connection
       ping:
 
+    - name: Debug TOM_PORT
+      debug:
+        var: TOM_PORT
+
+
     - name: Ensure Git is installed
       package:
         name: git
