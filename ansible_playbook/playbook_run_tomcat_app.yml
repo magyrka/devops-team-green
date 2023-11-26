@@ -28,7 +28,11 @@
           USER_PASS: "{{ USER_PASS }}"
           PG_PORT:   "{{ PG_PORT }}"
           PG_DB_NAME: "{{ PG_DB_NAME }}"
-
+          REDIS_CONTAINER_NAME: "{{ REDIS_CONTAINER_NAME }}"
+          REDIS_PORT: "{{ REDIS_PORT }}" 
+          MONGO_CONTAINER_NAME: "{{ MONGO_CONTAINER_NAME }}"
+          MONGO_PORT: "{{ MONGO_PORT }}" 
+          MONGO_DB_NAME: "{{ MONGO_DB_NAME }}"
 
 #    - name: Build Docker image with Git commit hash tag
 #      docker_image:
