@@ -45,6 +45,7 @@
       shell: |
         docker cp /opt/java-app/backup/2023-09-07.dump postgresql:/tmp/backup.dump
         docker exec postgresql psql -U "postgres" -d "schedule" -f /tmp/backup.dump
+        docker exec postgresql psql -U "postgres" -d "schedule" -f /tmp/backup.dump
 
     - name: Show results
       ansible.builtin.debug:
