@@ -5,6 +5,7 @@
   vars:
     APP_PATH: "/opt/java-app"
     GIT_REPO: "{{ GIT_REPO }}"
+    PG_DUMP_FILE: "/opt/java-app/backup/2023-09-07.dump"
 
   tasks:
     - name: Ping server - Check Connection
@@ -39,6 +40,11 @@
           MONGO_DB_NAME: "schedules"
           MONGO_CONTAINER_NAME: "mongodb"
           REDIS_CONTAINER_NAME: "redis"
+
+    - name: Restore PG data from file
+      shell: |
+        docker cp /opt/java-app/backup/2023-09-07.dump postgresql:/tmp/backup.dump
+        docker exec -it postgresql psql -U "{{ PG_USERNAME }}" -d "schedule" -f /tmp/backup.dump
 
     - name: Show results
       ansible.builtin.debug:
