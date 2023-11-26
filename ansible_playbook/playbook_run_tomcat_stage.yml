@@ -1,0 +1,36 @@
+---
+- name: Run Application with Docker Compose
+  hosts: stage_host
+  become: true
+  vars:
+    APP_PATH: "/opt/java-app"
+
+  tasks:
+    - name: Ping server - Check Connection
+      ping:
+
+    - name: Ensure Git is installed
+      package:
+        name: git
+        state: present
+
+    - name: Clone the Git repository
+      git:
+        repo: "{{ GIT_REPO }}"
+        dest: "{{ APP_PATH }}"
+        version: "ansible" 
+
+    - name: Tear down existing services
+      docker_compose:
+        project_src: "{{ APP_PATH }}"
+        state: absent
+
+    - name: Create and start services
+      docker_compose:
+        project_src: "{{ APP_PATH }}"
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+  
