@@ -24,9 +24,7 @@ services:
 
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DH_REPO}
     env_file:
       - .env
     environment:
