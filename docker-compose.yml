@@ -30,7 +30,6 @@ services:
     environment:
       - PG_CONTAINER_NAME=${PG_CONTAINER_NAME}
       - PG_DB_NAME=${PG_DB_NAME}
-      - PG_DB_NAME_TEST=${PG_DB_NAME_TEST}
       - USER_NAME=${USER_NAME}
       - USER_PASS=${USER_PASS}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
