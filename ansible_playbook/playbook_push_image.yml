@@ -16,7 +16,7 @@
         dest: "/opt/java-app"
 
     - name: Log into DockerHub
-      become: false
+      become: "{{ BECOME_BOOL }}"
       docker_login:
         username: "{{ DH_USERNAME }}"
         password: !vault |
