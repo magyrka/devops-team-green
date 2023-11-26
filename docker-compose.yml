@@ -2,8 +2,6 @@ version: '3.8'
 services:
 
   postgresql:
-    env_file:
-      - .env
     image: postgres:14
     container_name: ${PG_CONTAINER_NAME}
     restart: always
@@ -25,8 +23,6 @@ services:
 
   backend:
     image: ${DH_REPO}
-    env_file:
-      - .env
     environment:
       - PG_CONTAINER_NAME=${PG_CONTAINER_NAME}
       - PG_DB_NAME=${PG_DB_NAME}
@@ -49,8 +45,6 @@ services:
       java_app_network:
 
   mongodb:
-    env_file:
-      - .env
     image: mongo:jammy
     container_name: mongo-db
     volumes:
