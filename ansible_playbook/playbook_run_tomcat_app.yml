@@ -30,7 +30,7 @@
 
     - name: Run Mongo Container
       docker_container:
-        name: "{{ MONGO_CONTAINER_NAME }}"
+        name: mongo
         image: mongo:7.0-rc-jammy
         state: started
         volumes:
