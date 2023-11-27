@@ -21,7 +21,7 @@
 
     - name: Run Redis Container
       docker_container:
-        name:  redis
+        name: "{{ REDIS_CONTAINER_NAME }}"
         image: redis:7-alpine
         state: started
         restart: true
@@ -30,7 +30,7 @@
 
     - name: Run Mongo Container
       docker_container:
-        name: mongo
+        name: "{{ MONGO_CONTAINER_NAME }}"
         image: mongo:7.0-rc-jammy
         state: started
         volumes:
