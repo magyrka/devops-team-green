@@ -14,7 +14,7 @@
       git:
         repo: "{{ GIT_REPO }}"
         dest: "/opt/java-app"
-        refspec: "{{ GIT_BRANCH }}" 
+        version: "{{ GIT_BRANCH }}" 
         
     - name: Log into DockerHub
       docker_login:
