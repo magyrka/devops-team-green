@@ -19,28 +19,38 @@
       docker_volume:
         name: mongo_volume
 
+    - name: Create a network
+      docker_network:
+        name: network_prod
+
     - name: Run Redis Container
       docker_container:
         name: redis
         image: redis:7-alpine
         state: started
         restart: true
-        ports:
-          - "6379:6379"
+        networks:
+          - network_prod
+#        ports:
+#          - "6379:6379"
 
     - name: Run Mongo Container
       docker_container:
         name: mongo
         image: mongo:7.0-rc-jammy
         state: started
+        networks:
+          - network_prod
         volumes:
           - mongo_volume
 
-    - name: Run Tomcat container
+    - name: Run APP Tomcat container
       docker_container:
         name: app_container
         image: "{{ APP_IMAGE }}"
         state: started
+        networks:
+          - network_prod
         ports:
           - "8080:8080"
         env:
