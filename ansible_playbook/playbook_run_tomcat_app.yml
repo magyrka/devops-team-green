@@ -1,5 +1,5 @@
 ---
-- name: Run Application in Docker TOM
+- name: For Production. Run Application in Docker TOM Cat.
   hosts:
     - "{{ HOST_IP }}"
   become: true
@@ -14,6 +14,25 @@
       docker_image:
         name: "{{ APP_IMAGE }}"
         source: pull
+
+    - name: Create a volume
+      docker_volume:
+        name: mongo_volume
+
+    - name: Run Redis Container
+      docker_container:
+        name:  redis
+        image: redis:7-alpine
+        state: started
+        restart: true
+
+    - name: Run Mongo Container
+      docker_container:
+        name: mongo
+        image: mongo:7.0-rc-jammy
+        state: started
+        volumes:
+          - mongo_volume
 
     - name: Run Tomcat container
       docker_container:
@@ -34,9 +53,3 @@
           MONGO_PORT: "{{ MONGO_PORT }}" 
           MONGO_DB_NAME: "{{ MONGO_DB_NAME }}"
 
-#    - name: Build Docker image with Git commit hash tag
-#      docker_image:
-#        build:
-#          path: /path/to/your/app
-#        name: your_image_name:{{ commit_hash.stdout | trim }}
-#        pull: no  # build from the Dockerfile
