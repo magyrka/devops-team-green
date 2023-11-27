@@ -25,6 +25,8 @@
         image: redis:7-alpine
         state: started
         restart: true
+        ports:
+          - "6379:6379"
 
     - name: Run Mongo Container
       docker_container:
