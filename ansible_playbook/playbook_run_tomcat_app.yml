@@ -24,8 +24,8 @@
           - "8080:8080"
         env:
           PG_CONTAINER_NAME: "{{ PG_CONTAINER_NAME }}"
-          USER_NAME: "{{ USER_NAME }}"
-          USER_PASS: "{{ USER_PASS }}"
+          USER_NAME: "{{ PG_USERNAME }}"
+          USER_PASS: "{{ PG_PASSWORD }}"
           PG_PORT:   "{{ PG_PORT }}"
           PG_DB_NAME: "{{ PG_DB_NAME }}"
           REDIS_CONTAINER_NAME: "{{ REDIS_CONTAINER_NAME }}"
