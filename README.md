@@ -178,3 +178,4 @@ docker compose -f docker-compose.prod.yaml up -d
    - Valentyn Stratii
    - Liza Voievutska
    - Roman Hirnyak
+   - abimbus baba jee
