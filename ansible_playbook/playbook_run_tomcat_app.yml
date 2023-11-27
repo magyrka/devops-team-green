@@ -21,7 +21,7 @@
 
     - name: Run Redis Container
       docker_container:
-        name: "{{ REDIS_CONTAINER_NAME }}"
+        name: redis
         image: redis:7-alpine
         state: started
         restart: true
@@ -54,4 +54,3 @@
           MONGO_CONTAINER_NAME: "{{ MONGO_CONTAINER_NAME }}"
           MONGO_PORT: "{{ MONGO_PORT }}" 
           MONGO_DB_NAME: "{{ MONGO_DB_NAME }}"
-
