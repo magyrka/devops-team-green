@@ -43,8 +43,8 @@ git clone https://github.com/magyrka/devops-team-green && cd devops-team-green/
 # Postgresql credentials 
 PG_HOST=postgresql
 PG_DB_NAME=schedule
-USER_NAME=schedule
-USER_PASS=
+PG_USER=schedule
+PG_PASS=
 PG_DUMP_FILE='backup/2023-09-07.dump' 
 
 
@@ -79,18 +79,18 @@ docker volume create postgres-data
 docker run -d --name $PG_HOST \
 	--network schedule_network \
 	-v postgres-data:/var/lib/postgresql/data \
-	-e POSTGRES_PASSWORD=$USER_PASS \
+	-e POSTGRES_PASSWORD=$PG_PASS \
 	-e POSTGRES_DB=$PG_DB_NAME \
-	-e POSTGRES_USER=$USER_NAME \
+	-e POSTGRES_USER=$PG_USER \
 	postgres:14-alpine
 ```
 2. Restore PG data from file
 ```shell
 docker cp $PG_DUMP_FILE $PG_HOST:/tmp/backup.dump
-docker exec -it $PG_HOST psql -U $USER_NAME -d $PG_DB_NAME -f /tmp/backup.dump
-docker exec -it $PG_HOST psql -U $USER_NAME -c "CREATE DATABASE $PG_DB_NAME_TEST WITH OWNER $USER_NAME"
-docker exec -it $PG_HOST psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $USER_NAME;"
-docker exec -it $PG_HOST psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $USER_NAME;"
+docker exec -it $PG_HOST psql -U $PG_USER -d $PG_DB_NAME -f /tmp/backup.dump
+docker exec -it $PG_HOST psql -U $PG_USER -c "CREATE DATABASE $PG_DB_NAME_TEST WITH OWNER $PG_USER"
+docker exec -it $PG_HOST psql -U $PG_USER -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $PG_USER;"
+docker exec -it $PG_HOST psql -U $PG_USER -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $PG_USER;"
 ```
 
 3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
