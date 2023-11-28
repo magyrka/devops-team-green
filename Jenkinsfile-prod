@@ -49,7 +49,7 @@
             }
             }
 
-            stage('Build') {
+            stage('Deploy') {
                 steps {
                     sh "mv .env-sample .env"
                     sh "sed -i \"s/USER_NAME=.*/USER_NAME=\${POSTGRESQL_COMMON_CREDS_USR}/\" .env"
