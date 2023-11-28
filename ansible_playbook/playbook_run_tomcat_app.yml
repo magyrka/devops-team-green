@@ -28,7 +28,6 @@
         name: redis
         image: redis:7-alpine
         state: started
-        restart: true
         restart: yes
         restart_policy: "always"
         networks:
