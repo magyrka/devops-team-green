@@ -1,6 +1,6 @@
 ---
 - name: Run Application with Docker Compose
-  hosts: stage_host
+  hosts: stage
   become: true
   vars:
     APP_PATH: "/opt/java-app/"
