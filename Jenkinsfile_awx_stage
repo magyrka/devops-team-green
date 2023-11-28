@@ -11,6 +11,7 @@ pipeline {
     }
 
     stages {
+        when { changeset "frontend/*", changeset "src/*" }
         /*stage('Cleanup') {
             steps {
                 script {
