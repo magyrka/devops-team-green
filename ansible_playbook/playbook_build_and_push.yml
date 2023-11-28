@@ -32,6 +32,7 @@
           path: "{{ APP_PATH }}"
         push: true
         force_tag: true
+        no_cache: true
         source: build   
         
     - name: Prune everything
