@@ -35,6 +35,8 @@ services:
       - REDIS_PORT=6379
     container_name: schedule-app
     restart: always
+    pull_policy: always
+
     depends_on:
       - postgresql
     ports:
