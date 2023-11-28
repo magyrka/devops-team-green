@@ -4,7 +4,6 @@
   become: true
   vars:
     APP_PATH: "/opt/java-app/"
-    GIT_REPO: "{{ GIT_REPO }}"
     PG_DUMP_FILE: "{{ APP_PATH }}backup/2023-09-07.dump"
 
   tasks:
