@@ -1,7 +1,6 @@
 ---
 - name: For Production. Run Application in Docker TOM Cat.
-  hosts:
-    - "{{ HOST_IP }}"
+  hosts: prod
   become: true
   vars:
     APP_IMAGE_TAG: latest
