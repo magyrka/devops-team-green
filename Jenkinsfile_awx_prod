@@ -73,7 +73,7 @@ pipeline {
         }*/
 
         stage('Deploy') {
-            when { changeset "src/*"}
+            when { anyOf {changeset "src/*", changeset "frontend/*"}}
             steps{
                 ansibleTower inventory: "${INVENTORY_FILE}",
                 jobTemplate: 'Deploy in Prod', 
