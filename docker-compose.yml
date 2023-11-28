@@ -38,7 +38,7 @@ services:
     depends_on:
       - postgresql
     ports:
-      - "${APP_PORT}:8080"
+      - "30080:8080"
     networks:
       - java_app_network
 
