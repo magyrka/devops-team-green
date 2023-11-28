@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    when { changeset "frontend/*", changeset "src/*" }
+
     environment{
         TOWER_SERVER = 'tower'
         TOWER_CRED_ID = 'tower'
@@ -23,6 +23,7 @@ pipeline {
         }*/
 
         stage('Checkout') {
+            when { changeset "frontend/*", changeset "src/*" }
             steps {
                 /*script {
                     gitRepoUrl = 'https://github.com/DTG-cisco/devops-team-green-2.git'
