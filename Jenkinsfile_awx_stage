@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    when { changeset "frontend/*", changeset "src/*" }
     environment{
         TOWER_SERVER = 'tower'
         TOWER_CRED_ID = 'tower'
@@ -9,9 +9,9 @@ pipeline {
         GIT_REPO_URL = 'https://github.com/DTG-cisco/devops-team-green-2.git'
         APP_NAME = "schedule_app"
     }
-
+    
     stages {
-        when { changeset "frontend/*", changeset "src/*" }
+        
         /*stage('Cleanup') {
             steps {
                 script {
