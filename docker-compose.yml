@@ -35,21 +35,24 @@ services:
       - MONGO_PORT=27017
       - REDIS_PORT=6379
     container_name: backend-tomcat
+    restart: always
     depends_on:
       - postgresql
     ports:
-      - "8080:8080"
+      - "30080:8080"
     networks:
       - java_app_network
 
   redis:
     image: redis:alpine
+    restart: always
     networks:
       java_app_network:
 
   mongodb:
     image: mongo:jammy
     container_name: mongo-db
+    restart: always
     volumes:
       - mongo_data:/data/db
     environment:
