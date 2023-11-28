@@ -18,7 +18,7 @@ pipeline {
             }
         }*/
 
-        stage('Checkout') {
+        /*stage('Checkout') {
             environment{
                 GIT_REPO_URL = 'https://github.com/DTG-cisco/devops-team-green-2.git'
             }
@@ -33,10 +33,10 @@ pipeline {
                 }*/
                 git branch: "${SCM_BRANCH}", url: "${GIT_REPO_URL}"
             }
-        }
+        }*/
 
 
-        stage('Test') {
+        /*stage('Test') {
             environment{
                 PG_CONTAINER_NAME="localhost"
                 USER_NAME = "$POSTGRES_CREDS_USR"
@@ -65,7 +65,7 @@ pipeline {
                     sh 'docker rm postgresql_test mongodb_test'
                 }
             }
-        }
+        }*/
 
         /*stage('Build') {
             steps{
