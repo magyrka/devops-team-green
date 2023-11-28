@@ -23,7 +23,6 @@ pipeline {
         }*/
 
         stage('Checkout') {
-            when { changeset "src/*" }
             steps {
                 /*script {
                     gitRepoUrl = 'https://github.com/DTG-cisco/devops-team-green-2.git'
