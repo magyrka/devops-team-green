@@ -20,7 +20,7 @@
       git:
         repo: "{{ GIT_REPO }}"
         dest: "{{ APP_PATH }}"
-        version: "ansible" 
+        version: "Staging" 
 
     - name: Tear down existing services
       docker_compose:
