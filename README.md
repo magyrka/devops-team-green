@@ -174,7 +174,7 @@ docker compose -f docker-compose.prod.yaml up -d
    - Backend team (incognito)
 - Devops Team:
    - Vitaliy Kostyreva 
-   - Vladyslav Ivanskiy(one day ill kms)
+   - Vladyslav Ivanskiy
    - Valentyn Stratii
    - Liza Voievutska
    - Roman Hirnyak
