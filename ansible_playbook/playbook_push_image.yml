@@ -1,0 +1,39 @@
+---
+- name: Build and Push Docker image to Docker Hub
+  hosts: "{{ HOST_IP }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Ensure Git is installed
+      package:
+        name: git
+        state: present
+
+    - name: Clone the repository
+      git:
+        repo: "{{ GIT_URL }}"
+        dest: "/opt/java-app"
+
+    - name: Log into DockerHub
+      become: "{{ BECOME_BOOL }}"
+      docker_login:
+        username: "{{ DH_USERNAME }}"
+        password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          64326365633039383131626234386263643535306136323362646439363236353132353966363736
+          3961646430396161643265383439343065663664373866610a333363656265373439303161653733
+          31623630323762613538336164323736383961343063613733343662356161383161303762613233
+          6533386130363862380a373831666466343839363931326466656263356634343034396330336232
+          3562
+
+    - name: Build and Push Docker image to Docker Hub
+      docker_image:
+        name: "schedule-app"
+        tag: "latest"
+        repository: "{{ DH_REPO }}"
+        build:
+          path: "/opt/java-app"
+        push: true
+        force_tag: true
+        source: build

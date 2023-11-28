@@ -1,0 +1,42 @@
+---
+- name: Install Docker
+  hosts:
+    - "{{ HOST_IP }}"
+  become: true
+  vars:
+    apt_key_url: https://download.docker.com/linux/ubuntu/gpg
+
+  tasks:
+    - name: Ping server - Check Connection
+      ping:
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt key
+      apt_key:
+        url: "{{ apt_key_url }}"
+        state: present
+
+    - name: Add docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Create docker group
+      group:
+        name: docker
+        state: present
