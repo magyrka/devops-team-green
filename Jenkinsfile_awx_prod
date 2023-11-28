@@ -1,0 +1,111 @@
+pipeline {
+    agent any
+    environment{
+        TOWER_SERVER = 'tower'
+        TOWER_CRED_ID = 'tower'
+        INVENTORY_FILE = 'GCP-hosts'
+        APP_NAME = "schedule_app"
+        SCM_BRANCH = 'main'
+    }
+    stages {
+        /*stage('Cleanup') {
+            steps {
+                script {
+                    sh 'docker stop $PG_CONTAINER_NAME $MONGO_CONTAINER_NAME $REDIS_CONTAINER_NAME $APP_NAME  || true'
+                    sh 'docker rm $PG_CONTAINER_NAME $MONGO_CONTAINER_NAME $REDIS_CONTAINER_NAME $APP_NAME  || true'
+                    sh 'docker volume rm -f postgres-data mongo-data || true'
+                }
+            }
+        }*/
+
+        stage('Checkout') {
+            environment{
+                GIT_REPO_URL = 'https://github.com/DTG-cisco/devops-team-green-2.git'
+            }
+            steps {
+                /*script {
+                    gitRepoUrl = 'https://github.com/DTG-cisco/devops-team-green-2.git'
+                    gitBranch = 'main'
+
+                    // sh 'ssh -T git@github.com'
+                    checkout([$class: 'GitSCM', branches: [[name: "${gitBranch}"]], userRemoteConfigs: [[url: "${gitRepoUrl}"]]])
+                    sh 'cp .env-sample .env'
+                }*/
+                git branch: "${SCM_BRANCH}", url: "${GIT_REPO_URL}"
+            }
+        }
+
+
+        stage('Test') {
+            environment{
+                PG_CONTAINER_NAME="localhost"
+                USER_NAME = "$POSTGRES_CREDS_USR"
+                USER_PASS = "$POSTGRES_CREDS_PSW"
+                PG_DB_NAME = "postgres"
+                PG_PORT = 5432
+                MONGO_DB_NAME="schedules"
+                MONGO_PORT=27017
+                MONGO_CONTAINER_NAME="localhost"
+            }
+            steps {
+                sh 'docker run -d --name postgresql_test \
+                    -e POSTGRES_USER=$USER_NAME \
+                    -e POSTGRES_PASSWORD=$USER_PASS \
+                    -p 5432:5432 postgres:14-alpine'
+                sh 'docker run -d --name mongodb_test \
+                    -p 27017:27017 \
+                    mongo:7.0-rc-jammy'
+                sh 'chmod +x ./gradlew'
+                sh './gradlew test'
+            }
+            post {
+                always {
+                    // Remove the testdb container
+                    sh 'docker stop postgresql_test mongodb_test'
+                    sh 'docker rm postgresql_test mongodb_test'
+                }
+            }
+        }
+
+        /*stage('Build') {
+            steps{
+                ansibleTower inventory: "${INVENTORY_FILE}", jobTemplate: 'Docker Build', jobType: 'run', scmBranch: "${SCM_BRANCH}", towerCredentialsId: "${TOWER_CRED_ID}", towerLogLevel: 'false', towerServer: "${TOWER_SERVER}"
+            }
+        }*/
+
+        stage('Deploy') {
+            steps{
+                ansibleTower inventory: "${INVENTORY_FILE}",
+                jobTemplate: 'Deploy in Prod', 
+                jobType: 'run', 
+                scmBranch: "${SCM_BRANCH}", 
+                towerCredentialsId: "${TOWER_CRED_ID}", 
+                towerLogLevel: 'false', 
+                towerServer: "${TOWER_SERVER}"
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        
+        success {
+            echo 'This will run only if successful'
+            discordSend description: 'Job was finished with status SUCCESS', footer: 'Devops green team ', image: '', 
+            link: 'http://78.27.236.114:8080/job/Schedule-Stage-pipeline', result: 'SUCCESS', 
+            scmWebUrl: 'https://github.com/DTG-cisco/devops-team-green-2/', showChangeset: true, 
+            thumbnail: 'https://www.jenkins.io/images/logos/cossack/cossack.png', title: 'Notifer from Jenkins pipeline',
+            webhookURL: 'https://discord.com/api/webhooks/1174680751195828315/EHin-nX7Sr3fJXF1e7kJsyqUGC8x6gcZShTPRDGgHE2TBFTxJCVEC-yUIwoqBspiyvj8'
+        }
+        failure {
+            echo 'This will run only if failed'
+            discordSend description: 'Job was finished with status FAILURE', footer: 'Devops green team ', image: '', 
+            link: 'http://78.27.236.114:8080/job/Schedule-Stage-pipeline', result: 'FAILURE', 
+            scmWebUrl: 'https://github.com/DTG-cisco/devops-team-green-2/', showChangeset: true, 
+            thumbnail: 'https://www.jenkins.io/images/logos/miner/miner.png', title: 'Notifer from Jenkins pipeline',
+            webhookURL: 'https://discord.com/api/webhooks/1174680751195828315/EHin-nX7Sr3fJXF1e7kJsyqUGC8x6gcZShTPRDGgHE2TBFTxJCVEC-yUIwoqBspiyvj8'
+        
+        }
+    }
+}
