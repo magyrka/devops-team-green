@@ -1,0 +1,54 @@
+---
+- name: Run Application with Docker Compose
+  hosts: stage_host
+  become: true
+  vars:
+    APP_PATH: "/opt/java-app/"
+    GIT_REPO: "{{ GIT_REPO }}"
+    PG_DUMP_FILE: "{{ APP_PATH }}backup/2023-09-07.dump"
+
+  tasks:
+    - name: Ping server - Check Connection
+      ping:
+
+    - name: Ensure Git is installed
+      package:
+        name: git
+        state: present
+
+    - name: Clone the Git repository
+      git:
+        repo: "{{ GIT_REPO }}"
+        dest: "{{ APP_PATH }}"
+        version: "ansible" 
+
+    - name: Tear down existing services
+      docker_compose:
+        project_src: "{{ APP_PATH }}"
+        state: absent
+
+    - name: Create and start services
+      docker_compose:
+        project_src: "{{ APP_PATH }}"
+      register: output
+      environment: 
+          PG_HOST: "postgresql"
+          PG_USER: "{{ PG_USERNAME }}"
+          PG_PASS: "{{ PG_PASSWORD }}"
+          PG_DB_NAME: "schedule"
+          DH_REPO: "{{ DH_REPO }}"
+          MONGO_DB_NAME: "schedule"
+          MONGO_HOST: "mongodb"
+          REDIS_HOST: "redis"
+          APP_PORT: "{{ APP_PORT }}"
+
+    - name: Restore PG data from file
+      shell: |
+        docker cp /opt/java-app/backup/2023-09-07.dump postgresql:/tmp/backup.dump
+        docker exec postgresql psql -U "postgres" -d "schedule" -f /tmp/backup.dump
+        docker exec postgresql psql -U "postgres" -d "schedule" -f /tmp/backup.dump
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+  

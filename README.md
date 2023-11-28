@@ -41,20 +41,19 @@ git clone https://github.com/DTG-cisco/devops-team-green-2 && cd devops-team-gre
 ### Creating Your .env File with variables
 ```dotenv
 # Postgresql credentials 
-PG_CONTAINER_NAME=postgresql
+PG_HOST=postgresql
 PG_DB_NAME=schedule
-PG_DB_NAME_TEST=schedule_test
-USER_NAME=schedule
-USER_PASS=
+PG_USER=schedule
+PG_PASS=
 PG_DUMP_FILE='backup/2023-09-07.dump' 
 
 
 # Mongo credentials
 MONGO_DB_NAME=schedules
-MONGO_CONTAINER_NAME=mongodb
+MONGO_HOST=mongodb
 
 # Redis credentials
-REDIS_CONTAINER_NAME=redis
+REDIS_HOST=redis
 
 # APP Ports
 PG_PORT=5432
@@ -77,26 +76,26 @@ docker network create --driver bridge schedule_network
 1. Run this simple commands to Start version 14 of PostgreSQL in Docker container
 ```shell
 docker volume create postgres-data
-docker run -d --name $PG_CONTAINER_NAME \
+docker run -d --name $PG_HOST \
 	--network schedule_network \
 	-v postgres-data:/var/lib/postgresql/data \
-	-e POSTGRES_PASSWORD=$USER_PASS \
+	-e POSTGRES_PASSWORD=$PG_PASS \
 	-e POSTGRES_DB=$PG_DB_NAME \
-	-e POSTGRES_USER=$USER_NAME \
+	-e POSTGRES_USER=$PG_USER \
 	postgres:14-alpine
 ```
 2. Restore PG data from file
 ```shell
-docker cp $PG_DUMP_FILE $PG_CONTAINER_NAME:/tmp/backup.dump
-docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -d $PG_DB_NAME -f /tmp/backup.dump
-docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "CREATE DATABASE $PG_DB_NAME_TEST WITH OWNER $USER_NAME"
-docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $USER_NAME;"
-docker exec -it $PG_CONTAINER_NAME psql -U $USER_NAME -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $USER_NAME;"
+docker cp $PG_DUMP_FILE $PG_HOST:/tmp/backup.dump
+docker exec -it $PG_HOST psql -U $PG_USER -d $PG_DB_NAME -f /tmp/backup.dump
+docker exec -it $PG_HOST psql -U $PG_USER -c "CREATE DATABASE $PG_DB_NAME_TEST WITH OWNER $PG_USER"
+docker exec -it $PG_HOST psql -U $PG_USER -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $PG_USER;"
+docker exec -it $PG_HOST psql -U $PG_USER -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME_TEST TO $PG_USER;"
 ```
 
 3. Configure connection url in `src/main/resources/hibernate.properties` and `src/test/resources/hibernate.properties` files:
 ```text
-hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:${PG_PORT}/${PG_DB_NAME}
+hibernate.connection.url=jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DB_NAME}
 ```
 
 ## Database MongoDB
@@ -104,7 +103,7 @@ hibernate.connection.url=jdbc:postgresql://${PG_CONTAINER_NAME}:${PG_PORT}/${PG_
 ```shell
 docker volume create mongo-data
 docker run -d --network schedule_network \
-   --name $MONGO_CONTAINER_NAME \
+   --name $MONGO_HOST \
    -v mongo-data:/data/db mongo:7.0-rc-jammy
 ```
 
@@ -112,11 +111,11 @@ docker run -d --network schedule_network \
 1. Start the latest version of Redis in Docker container   
 ```shell
 docker run -d --network schedule_network \
-   --name $REDIS_CONTAINER_NAME redis:7-alpine
+   --name $REDIS_HOST redis:7-alpine
 ```
 2. Configure connection url in `src/main/resources/cache.properties` file:
 ```text
-redis.address = redis://${REDIS_CONTAINER_NAME}:${REDIS_PORT}
+redis.address = redis://${REDIS_HOST}:${REDIS_PORT}
 ```
 
 ## Starting backend server using IntelliJ IDEA and Tomcat
@@ -174,7 +173,7 @@ docker compose -f docker-compose.prod.yaml up -d
    - Backend team (incognito)
 - Devops Team:
    - Vitaliy Kostyreva 
-   - Vladyslav Ivanskiy
+   - Vladyslav Ivanskiy(one day ill kms)
    - Valentyn Stratii
    - Liza Voievutska
    - Roman Hirnyak

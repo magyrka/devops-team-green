@@ -1,0 +1,66 @@
+---
+- name: Install Redis and configure
+  hosts: "{{ HOST_IP }}"
+  become: yes
+
+  tasks:
+    - name: Install needed apps for Redis
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - lsb-release
+        - curl
+        - gnupg
+
+    - name: Create sources.list.d directory
+      file:
+        path: /etc/apt/sources.list.d
+        state: directory
+
+    - name: Add an GPG  key to a specific keyring file
+      ansible.builtin.apt_key:
+        url: https://packages.redis.io/gpg
+        keyring: /usr/share/keyrings/redis-archive-keyring.gpg
+
+#   - name: Set up Redis
+#     shell: |
+#       curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+#       echo "deb
+
+    - name: Add Redis repository to sources.list
+      apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Redis
+      apt:
+        name: redis
+        state: present
+      notify:
+        - Enable Redis
+
+  handlers:
+  - name: Restart Redis
+    systemd:
+      name: redis-server
+      state: restarted
+
+  - name: Start Redis
+    systemd:
+      name: redis-server
+      state: started
+
+  - name: Stop Redis
+    systemd:
+      name: redis-server
+      state: stopped
+
+  - name: Enable Redis
+    systemd:
+      name: redis-server
+      enabled: yes

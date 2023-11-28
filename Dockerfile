@@ -14,7 +14,7 @@ COPY --from=frontend_build /react-app/build/static /java-app/src/main/webapp/sta
 COPY --from=frontend_build /react-app/build/. /java-app/src/main/webapp/WEB-INF/view
 RUN rm -rf /java-app/src/main/webapp/WEB-INF/view/assets \
     && rm -rf /java-app/src/main/webapp/WEB-INF/view/static
-RUN gradle build -x test
+RUN gradle build -x test --no-watch-fs
 
 # Stage 3: Deploy war on Tomcat9
 FROM tomcat:9-jre11
