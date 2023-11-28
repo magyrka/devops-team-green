@@ -1,6 +1,6 @@
 ---
 - name: Build and Push Docker image to Docker Hub
-  hosts: build_vm
+  hosts: build
   become: true
   gather_facts: false
   vars:
