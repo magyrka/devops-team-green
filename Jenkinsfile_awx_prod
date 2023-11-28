@@ -73,6 +73,7 @@ pipeline {
         }*/
 
         stage('Deploy') {
+            when { changeset "src/*"}
             steps{
                 ansibleTower inventory: "${INVENTORY_FILE}",
                 jobTemplate: 'Deploy in Prod', 
