@@ -40,6 +40,7 @@
           MONGO_DB_NAME: "schedules"
           MONGO_CONTAINER_NAME: "mongodb"
           REDIS_CONTAINER_NAME: "redis"
+          APP_PORT: "{{ APP_PORT }}"
 
     - name: Restore PG data from file
       shell: |
