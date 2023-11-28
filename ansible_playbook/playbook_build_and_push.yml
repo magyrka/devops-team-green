@@ -3,7 +3,9 @@
   hosts: build_vm
   become: true
   gather_facts: false
-
+  vars:
+    APP_PATH: "/opt/java-app/"
+    
   tasks:
     - name: Ensure Git is installed
       package:
@@ -13,7 +15,7 @@
     - name: Clone the repository
       git:
         repo: "{{ GIT_REPO }}"
-        dest: "/opt/java-app"
+        dest: "{{ APP_PATH }}"
         version: "{{ GIT_BRANCH }}" 
         
     - name: Log into DockerHub
@@ -27,7 +29,7 @@
         tag: "latest"
         repository: "{{ DH_REPO }}"
         build:
-          path: "/opt/java-app"
+          path: "{{ APP_PATH }}"
         push: true
         force_tag: true
         source: build   
