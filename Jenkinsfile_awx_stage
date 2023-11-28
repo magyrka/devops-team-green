@@ -23,6 +23,12 @@ pipeline {
         }*/
 
         stage('Checkout') {
+            when { 
+                anyOf {
+                    changeset "src/*"
+                    changeset "frontend/*"
+                }
+            }
             steps {
                 /*script {
                     gitRepoUrl = 'https://github.com/DTG-cisco/devops-team-green-2.git'
@@ -37,6 +43,13 @@ pipeline {
 
 
         stage('Test') {
+            when { 
+                anyOf {
+                    changeset "src/*"
+                    changeset "frontend/*"
+                }
+            }
+
             environment{
                 PG_CONTAINER_NAME="localhost"
                 USER_NAME = "$POSTGRES_CREDS_USR"
@@ -68,6 +81,13 @@ pipeline {
         }
 
         stage('Build') {
+            when { 
+                anyOf {
+                    changeset "src/*"
+                    changeset "frontend/*"
+                }
+            }
+
             steps{
                 ansibleTower inventory: "${INVENTORY_FILE}", 
                 jobTemplate: 'Docker Build', 
@@ -81,6 +101,13 @@ pipeline {
         }
 
         stage('Deploy') {
+            when { 
+                anyOf {
+                    changeset "src/*"
+                    changeset "frontend/*"
+                }
+            }
+
             steps{
                 ansibleTower inventory: "${INVENTORY_FILE}",
                 jobTemplate: 'Deploy on Stage', 
