@@ -23,19 +23,18 @@ pipeline {
                 GIT_REPO_URL = 'https://github.com/DTG-cisco/devops-team-green-2.git'
             }
             steps {
-                /*script {
+                script {
                     gitRepoUrl = 'https://github.com/DTG-cisco/devops-team-green-2.git'
                     gitBranch = 'main'
 
                     // sh 'ssh -T git@github.com'
                     checkout([$class: 'GitSCM', branches: [[name: "${gitBranch}"]], userRemoteConfigs: [[url: "${gitRepoUrl}"]]])
                     sh 'cp .env-sample .env'
-                }*/
+                }
                 git branch: "${SCM_BRANCH}", url: "${GIT_REPO_URL}"
             }
         }*/
-
-
+        
         /*stage('Test') {
             environment{
                 PG_CONTAINER_NAME="localhost"
