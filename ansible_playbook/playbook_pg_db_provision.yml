@@ -1,0 +1,15 @@
+- name: Restore PostgreSQL database from dump
+  hosts: "{{ HOST_IP }}"
+  become: true
+  collections: ["community.postgresql"]
+
+  tasks:
+    - name: Restore DB
+      shell: > 
+        docker cp $PG_DUMP_FILE "{{ PG_HOST }}":/tmp/backup.dump
+        docker exec -it "{{ PG_HOST }}" psql -U "{{ PG_USER }}" -d "{{ PG_DB }}" -f /tmp/backup.dump
+
+#      community.postgresql.postgresql_db:
+#        name: "{{ PG_DB }}"
+#        state: restore
+#        target: /home/ubuntu/2023.dump
