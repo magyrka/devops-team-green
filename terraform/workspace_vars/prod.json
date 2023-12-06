@@ -1,0 +1,8 @@
+{
+  "env" : "prod",
+  "gcp_project_id": "cisco-team-green",
+  "zone": "us-west1-b",
+  "region": "us-west1",
+  "instance_count": 0,
+  "cidr_range": ["10.0.30.0/24", "10.0.31.0/24"]
+}
