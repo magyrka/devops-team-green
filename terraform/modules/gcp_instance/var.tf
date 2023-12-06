@@ -26,8 +26,7 @@ variable "gcp_project_id" {
 }
 
 variable "pub_key_path" {
-#  default = "../../id_rsa.pub"
-  type    = string
+  type = string
 }
 
 variable "subnet_id" {

@@ -8,7 +8,7 @@ resource "google_compute_network" "vpc_network" {
 }
 
 resource "google_compute_subnetwork" "private" {
-  count = 2
+  count                    = 2
   name                     = "tf-subnet-${var.env}-${count.index}"
   ip_cidr_range            = element(var.cidr_range, count.index)
   region                   = var.region

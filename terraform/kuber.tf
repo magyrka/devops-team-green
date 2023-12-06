@@ -1,5 +1,5 @@
 resource "google_container_cluster" "primary" {
-  name = "tf-cluster-${var.env}"
+  name                = "tf-cluster-${var.env}"
   location            = var.zone
   network             = module.vpc-dev.google_compute_network_ID
   subnetwork          = module.vpc-dev.subnet_1_id

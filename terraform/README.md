@@ -1,6 +1,6 @@
 ## Implementation: Terraform for Google Cloud Infrastructure
 
-<img src="../screenshots/tf-logo.png" alt="Terraform Logo" width="180" style="float: right; margin-left: 20px;"/>
+<img src="../screenshots/tf-logo.png" alt="Terraform Logo" width="160" style="float: right; margin-left: 20px;"/>
 
 ### "Schedule" Project Structure:
 
@@ -70,3 +70,41 @@ Ensure that the following roles are assigned to the Terraform service account in
 - Compute Network Admin
 - Secret Manager Admin
 - Editor
+
+
+Example of directory structure with `credentials` and `id_rsa` keys:
+```text
+├── gcp_credentials.json
+├── database_pg.tf
+├── id_rsa
+├── id_rsa.pub
+├── kuber.tf
+├── main.tf
+├── Makefile
+├── modules
+├── gcp_instance
+│   ├── main.tf
+│   └── var.tf
+├── gcp_network
+│    ├── main.tf
+│    ├── nat.tf
+│    └── var.tf
+├── provider.tf
+├── README.md
+├── var.tf
+└── workspace_vars
+    ├── dev.json
+    ├── prod.json
+    └── stage.json
+
+```
+
+-------------------------------------------------
+### Usage with Makefile
+This project includes a Makefile to simplify common Terraform tasks. The Makefile contains several targets to perform actions like initializing Terraform, planning changes, applying changes to different environments, destroying resources, and more. All available commands are in Makefile 
+
+
+- Validate Terraform Configuration:
+```shell
+make validate
+```

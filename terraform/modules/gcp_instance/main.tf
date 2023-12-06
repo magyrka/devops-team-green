@@ -1,20 +1,20 @@
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance
 resource "google_compute_instance" "default" {
-  name         = var.instance_name
-  machine_type = var.machine_type
-  zone         = var.zone
-  tags         = ["ssh", "schedule", "${terraform.workspace}"]
-  count        = var.instance_count
+  name                = var.instance_name
+  machine_type        = var.machine_type
+  zone                = var.zone
+  tags                = ["ssh", "schedule", "${terraform.workspace}"]
+  count               = var.instance_count
   deletion_protection = var.delete_protection
 
   boot_disk {
     initialize_params {
-      image  = "ubuntu-os-cloud/ubuntu-2204-lts"
-      size   = 12
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
+      size  = 12
       labels = {
         "author" : "vitaliy",
         "app" : "schedule",
-        "environment": "${terraform.workspace}"
+        "environment" : "${terraform.workspace}"
       }
     }
   }
