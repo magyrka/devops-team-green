@@ -1,6 +1,6 @@
 ## Implementation: Terraform for Google Cloud Infrastructure
 
-<img src="../screenshots/tf-logo.png" alt="Terraform Logo" width="200" style="float: right; margin-left: 20px;"/>
+<img src="../screenshots/tf-logo.png" alt="Terraform Logo" width="180" style="float: right; margin-left: 20px;"/>
 
 ### "Schedule" Project Structure:
 
@@ -16,7 +16,9 @@ The project is organized into several directories:
   - **stage/**: Configuration for the staging environment.
 
 ### Usage
-- add required variables to files `terraform/workspace_vars/prod.json`
+- Genetate ssh key-pair for new instances (if needed) in the terraform directory  
+- Add secret PG_PASSWORD to GCP Secret Manager (nedded for Postgres DB)
+- Add required variables to files `terraform/workspace_vars/prod.json`, example:
 ```text
 {
   "env" : "prod",
@@ -27,18 +29,18 @@ The project is organized into several directories:
   "cidr_range": ["10.0.30.0/24", "10.0.31.0/24"]
 }
 ```
-- modify resource configurations in main.tf (for example):
+- Modify resource configurations in main.tf (for example):
 ```text
 machine_type  = "e2-micro"      # 2 vCPU + 1 GB memory
 machine_type  = "e2-medium"     # 2 vCPU + 4 GB memory
 machine_type  = "e2-standard-2" # 2 vCPU + 8 GB memory
 ```
 
-- create local workspaces (prod, stage, dev) using commands:
+- Create local workspaces (prod, stage, dev) using commands:
 ```shell
 terraform workspace new prod
 ```
-- switch between workspaces using commands:
+- Switch between workspaces using commands:
 ```shell
 terraform workspace list
 terraform workspace select dev
