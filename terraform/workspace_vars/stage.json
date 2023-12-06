@@ -1,0 +1,8 @@
+{
+  "env" : "stage",
+  "instance_count": 0,
+  "cidr_range": ["10.0.20.0/24", "10.0.21.0/24"],
+  "gcp_project_id": "cisco-team-green",
+  "zone": "us-west1-b",
+  "region": "us-west1"
+}
