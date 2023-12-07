@@ -2,6 +2,10 @@ include "root" {
   path = find_in_parent_folders()
 }
 
+terraform {
+  source = "${local.base_source_url}?version=8.0.0"
+}
+
 locals {
   base_source_url = "tfr:///terraform-google-modules/network/google"
 
