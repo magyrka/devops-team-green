@@ -1,0 +1,56 @@
+name: 'Terragrunt'
+run-name: "Terragrunt GCP"
+env:
+  CIDR_RANGE: "10.0.10.0/24"
+  tf_version: '1.5.7'
+  tg_version: '0.53.2'
+  working_dir: 'terragrunt'
+
+on:
+  workflow_run:
+    workflows: [ "Terragrunt Pipeline to Test app" ]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Terragrunt GCP pipeline'
+  push:
+    paths:
+      - "terragrunt/**"
+    branches: [ "DTG-73-Move-TF-to-Terragrunt"]
+
+jobs:
+  Terragrunt:
+    name: 'Terragrunt'
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.0.0
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2.0.3
+      with:
+        cli_config_credentials_token: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+    - name: Check terragrunt HCL
+      uses: gruntwork-io/terragrunt-action@v2
+      with:
+          tf_version: ${{ env.tf_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ${{ env.working_dir }}
+          tg_command: 'run-all init'
+  #        tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
+
+    - name: Test bash
+      run: |
+        pwd
+        ls
+        terragrunt --version
+
