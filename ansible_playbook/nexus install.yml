@@ -1,0 +1,73 @@
+- name: Nexus
+  hosts: nexus
+  become: yes
+
+        
+  vars:
+    nexus_admin_password: "{{ NEX_ADMIN_PW }}"
+    nexus_public_hostname: 'nexus'
+    nexus_privileges:
+      - name: all-repos-read
+        description: 'Read & Browse access to all repos'
+        repository: '*'
+        actions:
+          - read
+          - browse
+      - name: project-deploy
+        description: 'Deployments to project'
+        repository: project
+        actions:
+          - add
+          - edit
+    nexus_roles:
+      - id: Developpers
+        name: developers
+        description: All developers
+        privileges:
+          - nx-search-read
+          - all-repos-read
+          - project-deploy
+        roles: []
+    nexus_local_users:
+      - username: jenkins # used as key to update
+        first_name: Jenkins
+        last_name: CI
+        email: youshouldkysnow@ltg.com
+        password: "VArIDfBDVM24eeS"
+        roles:
+          - Developpers
+    nexus_blobstores:
+      - name: artifacts
+        path: /var/nexus/blobs/artifacts
+
+
+
+    nexus_config_docker: true
+    nexus_repos_docker_hosted:
+      - name: docker-hosted
+        http_port: "{{ N_DOCKER_HOSTED_PORT }}"
+        v1_enabled: True
+    nexus_repos_docker_proxy:
+      - name: docker-proxy
+        http_port: "{{ N_DOCKER_PROXY_PORT }}"
+        v1_enabled: True
+        index_type: "HUB"
+        remote_url: "https://registry-1.docker.io"
+        use_nexus_certificates_to_access_index: false
+        maximum_component_age: 1440
+        maximum_metadata_age: 1440
+        negative_cache_enabled: true
+        negative_cache_ttl: 1440
+    nexus_repos_docker_group:
+      - name: docker-group
+        http_port: "{{ N_DOCKER_GROUP_PORT }}"
+        v1_enabled: True
+        member_repos:
+          - docker-hosted
+          - docker-proxy
+
+
+
+  roles:
+    - { role: geerlingguy.java }
+    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy_http.load", "headers.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
