@@ -1,9 +1,4 @@
 ---
-# apiVersion: "v1"
-# kind: "Namespace"
-# metadata:
-#   name: "app"
----
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
@@ -28,7 +23,7 @@ spec:
         - containerPort: 8080
         env:
         - name: "PG_HOST"
-          value: "35.222.130.231"
+          value: "10.254.81.3"
         - name: "PG_PORT"
           value: "5432"
         - name: "PG_DB_NAME"
@@ -51,6 +46,8 @@ spec:
           value: "localhost"
         - name: "MONGO_PORT"
           value: "27017"
+        - name: "MONGO_DB_NAME"
+          value: "schedule"
 
       - name: "redis"
         image: "redis:7-alpine"
@@ -71,6 +68,6 @@ spec:
   selector:
     app: "schedule-app"
   type: "LoadBalancer"
-  loadBalancerIP: ""
+
 
                   
