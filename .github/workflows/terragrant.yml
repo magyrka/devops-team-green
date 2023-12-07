@@ -39,7 +39,7 @@ on:
     branches: [ "DTG-73-Move-TF-to-Terragrunt"]
 
 jobs:
-  Terragrunt GCP:
+  Terragrunt:
     name: 'Terragrunt'
     runs-on: ${{ github.event.inputs.runner || 'ubuntu-20.04' }}
 
