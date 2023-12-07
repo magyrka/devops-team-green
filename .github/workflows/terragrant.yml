@@ -35,7 +35,7 @@ on:
           - ubuntu-20.04
   push:
  #   paths:
-#      - "terragrunt/**"
+#     - "terragrunt/**"
     branches: [ "DTG-73-Move-TF-to-Terragrunt"]
 
 jobs:
