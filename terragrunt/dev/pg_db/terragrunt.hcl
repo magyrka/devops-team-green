@@ -4,13 +4,13 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network?ref=DTG-73-Move-TF-to-Terragrunt"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_psql?ref=DTG-73-Move-TF-to-Terragrunt"
 }
 dependency "vpc" {
-  config_path = "../vpc"
+  config_path                             = "../vpc"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    private_vpc_con =  "projects%2Fcisco-team-green%2Fglobal%2Fnetworks%2Ftf-vpc-prod:servicenetworking.googleapis.com"
+    private_vpc_con           = "projects%2Fcisco-team-green%2Fglobal%2Fnetworks%2Ftf-vpc-prod:servicenetworking.googleapis.com"
     google_compute_network_ID = "projects/cisco-team-green/global/networks/tf-vpc-prod"
   }
 }
@@ -23,15 +23,11 @@ locals {
 }
 
 inputs = {
-#  https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency
+  #  https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency
   private_vpc_con = dependency.vpc.outputs.private_vpc_con
   vpc_id          = dependency.vpc.outputs.google_compute_network_ID
-  env        = "${local.env}"
-  vpc_name   = "tg-${local.env}"
-  region     = "${local.region}"
-  project_id = "${local.project_id}"
+  env             = "${local.env}"
+  vpc_name        = "tg-${local.env}"
+  region          = "${local.region}"
+  project_id      = "${local.project_id}"
 }
-
-#dependencies {
-#  paths = ["../vpc"]
-#}

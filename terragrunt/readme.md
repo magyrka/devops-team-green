@@ -31,3 +31,9 @@ terragrunt run-all init
 ```shell
 terragrunt run-all plan
 ```
+
+
+Formatting hcl files ( at the root)
+```shell
+terragrunt hclfmt
+```
