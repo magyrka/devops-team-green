@@ -1,14 +1,13 @@
-#include "root" {
-#  path = find_in_parent_folders()
-#}
+include "root" {
+  path = find_in_parent_folders()
+}
+# -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  source = "${local.base_source_url}?version=8.0.0"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
 }
 
 locals {
-  base_source_url = "tfr:///terraform-google-modules/network/google"
-
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
   region           = local.environment_vars.locals.region
@@ -17,14 +16,9 @@ locals {
 }
 
 inputs = {
-  network_name = "tg-${local.env}"
-  project_id  = "${local.project_id}"
-
-  subnets = [
-    {
-      subnet_name   = "${local.env}-sub-01"
-      subnet_ip     = "${local.cidr_range}"
-      subnet_region = local.region
-    },
-  ]
+  cidr_range = "${local.cidr_range}"
+  vpc_name   = "tg-vpc-${local.env}"
+  region     = "${local.region}"
+  env        = "${local.env}"
+  project_id = "${local.project_id}"
 }

@@ -4,8 +4,7 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  # Current Branch is - ref=DTG-73-Move-TF-to-Terragrunt ! Fix me
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network?ref=DTG-73-Move-TF-to-Terragrunt"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
 }
 
 locals {
