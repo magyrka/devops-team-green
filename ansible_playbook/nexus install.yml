@@ -2,7 +2,7 @@
   hosts: 34.0.39.110
   become: yes
 
- vars:
+  vars:
     nexus_url: "http://34.0.39.110:8081"
     nexus_api_version: "v1"
     nexus_admin_username: "admin"
@@ -92,40 +92,3 @@
         body: '{"port":{{ docker_repository_port }}}'
         headers:
           Content-Type: "application/json"
-        
-  # vars:
-  #   nexus_admin_password: "{{ NEX_ADMIN_PW }}"
-  #   nexus_public_hostname: 'nexus'
-  #   nexus_privileges:
-  #     - name: all-repos-read
-  #       description: 'Read & Browse access to all repos'
-  #       repository: '*'
-  #       actions:
-  #         - read
-  #         - browse
-  #     - name: project-deploy
-  #       description: 'Deployments to project'
-  #       repository: project
-  #       actions:
-  #         - add
-  #         - edit
-  #   nexus_roles:
-  #     - id: Developpers
-  #       name: developers
-  #       description: All developers
-  #       privileges:
-  #         - nx-search-read
-  #         - all-repos-read
-  #         - project-deploy
-  #       roles: []
-  #   nexus_local_users:
-  #     - username: jenkins # used as key to update
-  #       first_name: Jenkins
-  #       last_name: CI
-  #       email: youshouldkysnow@ltg.com
-  #       password: "VArIDfBDVM24eeS"
-  #       roles:
-  #         - Developpers
-  #   nexus_blobstores:
-  #     - name: artifacts
-  #       path: /var/nexus/blobs/artifacts
