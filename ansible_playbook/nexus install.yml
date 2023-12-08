@@ -2,14 +2,14 @@
   hosts: 34.0.39.110
   become: yes
 
-  vars:
-    nexus_url: "http://34.0.39.110:8081"
-    nexus_api_version: "v1"
-    nexus_admin_username: "admin"
-    nexus_admin_password: "VArIDfBDVM24eeS"
-    docker_repository_name: "docker-repo"
-    docker_repository_type: "docker"
-    docker_repository_port: 5000
+- vars:
+  nexus_url: "http://34.0.39.110:8081"
+  nexus_api_version: "v1"
+  nexus_admin_username: "admin"
+  nexus_admin_password: "VArIDfBDVM24eeS"
+  docker_repository_name: "docker-repo"
+  docker_repository_type: "docker"
+  docker_repository_port: 5000
 
   tasks:
     - name: Update all packages
