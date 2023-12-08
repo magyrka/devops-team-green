@@ -1,12 +1,24 @@
+[![Terragrunt](https://github.com/DTG-cisco/devops-team-green-2/actions/workflows/terragrant.yml/badge.svg?branch=main)](https://github.com/DTG-cisco/devops-team-green-2/actions/workflows/terragrant.yml)
+## Custom Terraform Modules
 
-Install Terraform 
-Install terragrunt 
-https://terragrunt.gruntwork.io/docs/getting-started/install/
-or:
+---------------------------
+### Description
+
+This project relies on custom Terraform modules located within the `terraform/modules` directory. These modules have been specifically designed to enhance the deployment and management of various infrastructure components, ensuring modularity and efficiency in handling resources within the environment.
+
+---------------------------
+
+### Prerequisites
+#### Before proceeding, ensure the following software is installed:
+
+- [Terragrunt](https://terragrunt.gruntwork.io/docs/getting-started/install/) 
+- [Terraform](https://developer.hashicorp.com/terraform/install)
+
+Installation via Snap (Terragrunt)
 ```shell
 sudo snap install terragrunt
 ```
-Best way is to use binary file
+For optimal usage, consider installing Terragrunt via binary files.
 
 #### Install the [ gcloud CLI](https://cloud.google.com/sdk/docs/install#deb)
 ```shell
@@ -19,21 +31,27 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 ```shell
 gcloud auth login
 gcloud auth login --cred-file=cisco-team-green.json
-export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/cisco-team-green.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/your-gcp-credentials.json"
 ```
-
-- init terragrunt inside dev/  directory
+---------------------------
+### Usage
+- Initialize Terragrunt inside the `terragrunt/` directory:
 ```shell
 terragrunt run-all init
 ```
 
-- plan terragrunt inside dev/  directory
+- Plan changes using Terragrunt inside the `terragrunt/` directory:
 ```shell
 terragrunt run-all plan
 ```
 
+- Apply Terragrunt changes inside the dev/ directory:
+```shell
+terragrunt run-all apply
+```
 
-Formatting hcl files ( at the root)
+### Formatting HCL Files
+For consistent HCL (HashiCorp Configuration Language) formatting across your project, execute the following command at the root:
 ```shell
 terragrunt hclfmt
 ```
