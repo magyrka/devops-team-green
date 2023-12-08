@@ -1,73 +1,131 @@
 - name: Nexus
-  hosts: nexus
+  hosts: 34.0.39.110
   become: yes
 
+ vars:
+    nexus_url: "http://34.0.39.110:8081"
+    nexus_api_version: "v1"
+    nexus_admin_username: "admin"
+    nexus_admin_password: "VArIDfBDVM24eeS"
+    docker_repository_name: "docker-repo"
+    docker_repository_type: "docker"
+    docker_repository_port: 5000
+
+  tasks:
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Java (OpenJDK 8)
+      apt:
+        name: openjdk-8-jre-headless
+        state: present
+
+    - name: Download Nexus tarball
+      get_url:
+        url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+        dest: "/tmp/nexus-latest.tar.gz"
+
+    - name: Extract Nexus tarball
+      unarchive:
+        src: "/tmp/nexus-latest.tar.gz"
+        dest: "/opt"
+        remote_src: yes
+
+    - name: Rename Nexus directory
+      command: mv /opt/nexus-3* /opt/nexus
+
+    - name: Add Nexus as a service
+      copy:
+        dest: "/etc/systemd/system/nexus.service"
+        content: |
+          [Unit]
+          Description=nexus service
+          After=network.target
+
+          [Service]
+          Type=forking
+          ExecStart=/opt/nexus/bin/nexus start
+          ExecStop=/opt/nexus/bin/nexus stop
+          User=root
+          Restart=on-abort
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and start Nexus service
+      systemd:
+        name: nexus
+        enabled: yes
+        state: started
+
+    - name: Create Docker Repository
+      uri:
+        url: "{{ nexus_url }}/service/rest/beta/repositories/docker/docker"
+        method: POST
+        user: "{{ nexus_admin_username }}"
+        password: "{{ nexus_admin_password }}"
+        status_code: 201
+        body: '{"name":"{{ docker_repository_name }}","online":true,"storage":{"blobStoreName":"default","strictContentTypeValidation":true,"writePolicy":"ALLOW_ONCE"}}'
+        headers:
+          Content-Type: "application/json"
+
+    - name: Enable Docker V1 API
+      uri:
+        url: "{{ nexus_url }}/service/rest/{{ nexus_api_version }}/docker/repositories/{{ docker_repository_name }}"
+        method: PUT
+        user: "{{ nexus_admin_username }}"
+        password: "{{ nexus_admin_password }}"
+        status_code: 204
+        body: '{"docker.v1":true}'
+        headers:
+          Content-Type: "application/json"
+
+    - name: Update Docker Repository Port
+      uri:
+        url: "{{ nexus_url }}/service/rest/beta/repositories/docker/docker/{{ docker_repository_name }}"
+        method: PUT
+        user: "{{ nexus_admin_username }}"
+        password: "{{ nexus_admin_password }}"
+        status_code: 204
+        body: '{"port":{{ docker_repository_port }}}'
+        headers:
+          Content-Type: "application/json"
         
-  vars:
-    nexus_admin_password: "{{ NEX_ADMIN_PW }}"
-    nexus_public_hostname: 'nexus'
-    nexus_privileges:
-      - name: all-repos-read
-        description: 'Read & Browse access to all repos'
-        repository: '*'
-        actions:
-          - read
-          - browse
-      - name: project-deploy
-        description: 'Deployments to project'
-        repository: project
-        actions:
-          - add
-          - edit
-    nexus_roles:
-      - id: Developpers
-        name: developers
-        description: All developers
-        privileges:
-          - nx-search-read
-          - all-repos-read
-          - project-deploy
-        roles: []
-    nexus_local_users:
-      - username: jenkins # used as key to update
-        first_name: Jenkins
-        last_name: CI
-        email: youshouldkysnow@ltg.com
-        password: "VArIDfBDVM24eeS"
-        roles:
-          - Developpers
-    nexus_blobstores:
-      - name: artifacts
-        path: /var/nexus/blobs/artifacts
-
-
-
-    nexus_config_docker: true
-    nexus_repos_docker_hosted:
-      - name: docker-hosted
-        http_port: "{{ N_DOCKER_HOSTED_PORT }}"
-        v1_enabled: True
-    nexus_repos_docker_proxy:
-      - name: docker-proxy
-        http_port: "{{ N_DOCKER_PROXY_PORT }}"
-        v1_enabled: True
-        index_type: "HUB"
-        remote_url: "https://registry-1.docker.io"
-        use_nexus_certificates_to_access_index: false
-        maximum_component_age: 1440
-        maximum_metadata_age: 1440
-        negative_cache_enabled: true
-        negative_cache_ttl: 1440
-    nexus_repos_docker_group:
-      - name: docker-group
-        http_port: "{{ N_DOCKER_GROUP_PORT }}"
-        v1_enabled: True
-        member_repos:
-          - docker-hosted
-          - docker-proxy
-
-
-
-  roles:
-    - { role: geerlingguy.java }
-    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy_http.load", "headers.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
+  # vars:
+  #   nexus_admin_password: "{{ NEX_ADMIN_PW }}"
+  #   nexus_public_hostname: 'nexus'
+  #   nexus_privileges:
+  #     - name: all-repos-read
+  #       description: 'Read & Browse access to all repos'
+  #       repository: '*'
+  #       actions:
+  #         - read
+  #         - browse
+  #     - name: project-deploy
+  #       description: 'Deployments to project'
+  #       repository: project
+  #       actions:
+  #         - add
+  #         - edit
+  #   nexus_roles:
+  #     - id: Developpers
+  #       name: developers
+  #       description: All developers
+  #       privileges:
+  #         - nx-search-read
+  #         - all-repos-read
+  #         - project-deploy
+  #       roles: []
+  #   nexus_local_users:
+  #     - username: jenkins # used as key to update
+  #       first_name: Jenkins
+  #       last_name: CI
+  #       email: youshouldkysnow@ltg.com
+  #       password: "VArIDfBDVM24eeS"
+  #       roles:
+  #         - Developpers
+  #   nexus_blobstores:
+  #     - name: artifacts
+  #       path: /var/nexus/blobs/artifacts
