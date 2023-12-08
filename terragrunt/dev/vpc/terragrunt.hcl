@@ -17,7 +17,7 @@ locals {
 
 inputs = {
   cidr_range = "${local.cidr_range}"
-  vpc_name   = "tf-vpc-${local.env}"
+  vpc_name   = "tg-vpc-${local.env}"
   region     = "${local.region}"
   env        = "${local.env}"
   project_id = "${local.project_id}"
