@@ -1,0 +1,5 @@
+appName: schedule-app
+namespace: app
+backend_image:
+  name: stratiiv/devops-team-green
+  tag: latest
