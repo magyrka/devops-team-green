@@ -3,7 +3,7 @@ run-name: "Terragrunt GCP"
 env:
   tf_version: '1.6.5'
   tg_version: '0.53.8'
-  working_dir: ${{ env.TG_WORK_DIR }}
+  working_dir: ${{ vars.TG_WORK_DIR }}
 
 on:
   workflow_run:
