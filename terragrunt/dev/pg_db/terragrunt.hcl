@@ -8,7 +8,7 @@ terraform {
 }
 dependency "vpc" {
   config_path = "../vpc"
-  mock_outputs_allowed_terraform_commands = ["validate", "plan", "destroy"]
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
     private_vpc_con =  "projects%2Fcisco-team-green%2Fglobal%2Fnetworks%2Ftf-vpc-prod:servicenetworking.googleapis.com"
     google_compute_network_ID = "projects/cisco-team-green/global/networks/tf-vpc-prod"
@@ -32,6 +32,6 @@ inputs = {
   project_id = "${local.project_id}"
 }
 
-dependencies {
-  paths = ["../vpc"]
-}
+#dependencies {
+#  paths = ["../vpc"]
+#}
