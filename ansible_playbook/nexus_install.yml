@@ -34,7 +34,7 @@
         remote_src: yes
 
     - name: Rename Nexus directory
-      command: "mv /opt/nexus* /opt/nexus"
+      shell: "mv /opt/nexus* /opt/nexus"
 
     - name: Add Nexus as a service
       copy:
