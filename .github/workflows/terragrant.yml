@@ -3,7 +3,7 @@ run-name: "Terragrunt GCP"
 env:
   tf_version: '1.6.5'
   tg_version: '0.53.8'
-  working_dir: 'terragrunt'
+  working_dir: ${{ env.TG_WORK_DIR }}
 
 on:
   workflow_run:
@@ -34,8 +34,8 @@ on:
           - self-hosted
           - ubuntu-20.04
   push:
- #   paths:
-#     - "terragrunt/**"
+    paths:
+     - "terragrunt/**"
     branches: [ "DTG-73-Move-TF-to-Terragrunt"]
 
 jobs:

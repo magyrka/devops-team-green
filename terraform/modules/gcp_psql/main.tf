@@ -1,4 +1,3 @@
-/*  ======= Moved to Modules =========
 locals {
   onprem = [
     # here we set instance IP, which needs connection to DB "34.163.72.39",
@@ -11,10 +10,10 @@ resource "google_sql_database_instance" "postgres" {
   #  https://registry.terraform.io/providers/hashicorp/google/5.5.0/docs/resources/sql_database_instance
   name                = "pg-14-${var.env}"
   database_version    = "POSTGRES_14"
-  deletion_protection = true #false
+  deletion_protection = false # true
   region              = var.region
   root_password       = data.google_secret_manager_secret_version.postgres_password.secret_data
-  depends_on          = [module.vpc-dev.private_vpc_con]
+  depends_on          = [var.private_vpc_con]
 
   settings {
     tier      = "db-f1-micro"
@@ -22,7 +21,7 @@ resource "google_sql_database_instance" "postgres" {
 
     ip_configuration {
       ipv4_enabled                                  = false
-      private_network                               = module.vpc-dev.google_compute_network_ID
+      private_network                               = var.vpc_id
       enable_private_path_for_google_cloud_services = true
       dynamic "authorized_networks" {
         for_each = local.onprem
@@ -48,4 +47,6 @@ resource "google_sql_database" "database" {
   name     = "schedule"
   instance = google_sql_database_instance.postgres.name
 }
-*/
+data "google_secret_manager_secret_version" "postgres_password" {
+  secret = "PG_PASSWORD"
+}

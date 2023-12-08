@@ -4,12 +4,10 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network?ref=DTG-73-Move-TF-to-Terragrunt"
 }
 
 locals {
-  base_source_url = "tfr:///terraform-google-modules/network/google"
-
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
   region           = local.environment_vars.locals.region

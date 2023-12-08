@@ -14,7 +14,8 @@ resource "google_compute_instance" "default" {
       labels = {
         "author" : "vitaliy",
         "app" : "schedule",
-        "environment" : "${terraform.workspace}"
+        "environment" : "${terraform.workspace}",
+        "type" : var.instance_name
       }
     }
   }
@@ -26,9 +27,6 @@ resource "google_compute_instance" "default" {
   }
 
   metadata_startup_script = "sudo apt-get update; sudo apt-get install -y nano"
-  metadata = {
-    ssh-keys = "ubuntu: ${file(var.pub_key_path)}"
-  }
 
   network_interface {
     subnetwork = var.subnet_id

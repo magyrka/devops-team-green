@@ -25,12 +25,8 @@ variable "gcp_project_id" {
   default     = "cisco-team-green"
 }
 
-variable "pub_key_path" {
-  type = string
-}
-
 variable "subnet_id" {
-  default = "Take it from Net"
+  default = "Take it from Net module"
 }
 
 variable "delete_protection" {
