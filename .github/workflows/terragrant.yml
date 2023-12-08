@@ -35,7 +35,7 @@ on:
           - self-hosted
           - ubuntu-20.04
   push:
-#    paths:
+#     paths:
 #     - "terragrunt/**"
     branches: [ "DTG-73-Move-TF-to-Terragrunt"]
 
