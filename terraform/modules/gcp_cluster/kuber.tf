@@ -1,8 +1,8 @@
 resource "google_container_cluster" "primary" {
   name                = "tf-cluster-${var.env}"
   location            = var.zone
-  network             = module.vpc-dev.google_compute_network_ID
-  subnetwork          = module.vpc-dev.subnet_1_id
+  network             = var.network_ID
+  subnetwork          = var.subnet_id
   deletion_protection = false # can be deleted
 
   remove_default_node_pool = true
@@ -12,14 +12,15 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
+#  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
   name       = "node-pool-${var.env}"
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.primary.id
-  node_count = 1
-  autoscaling {
-    min_node_count = 1
-    max_node_count = 4
-  }
+  node_count = var.count_nodes
+  #  autoscaling {
+  #    min_node_count = 1
+  #    max_node_count = 4
+  #  }
 
   node_config {
     preemptible  = true
@@ -28,7 +29,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       author = "vitaliy-k"
     }
 
-    service_account = "awx-350@cisco-team-green.iam.gserviceaccount.com"
+    service_account = var.serv_account
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]

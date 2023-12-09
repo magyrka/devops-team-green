@@ -15,21 +15,40 @@ module "instance-jenkins" {
   machine_type      = "e2-micro" # 2 vCPU + 1 GB memory
   subnet_id         = module.vpc-dev.subnet_1_id
   delete_protection = false # true
-  pub_key_path      = var.pub_key_path
 }
 
 module "instance-mongo" {
   source        = "./modules/gcp_instance"
   instance_name = "mongo-${var.env}"
-  count         = 1
+  count         = 0
   machine_type  = "e2-micro"
   zone          = var.zone
   subnet_id     = module.vpc-dev.subnet_1_id
-  pub_key_path  = var.pub_key_path
 }
 
+module "postgres-14" {
+  source          = "./modules/gcp_psql"
+  env             = var.env
+  region          = var.region
+  private_vpc_con = module.vpc-dev.private_vpc_con
+  vpc_id          = module.vpc-dev.google_compute_network_ID
+}
+
+module "cluster" {
+  source       = "./modules/gcp_cluster"
+  env          = var.env
+  zone         = var.zone
+  network_ID   = module.vpc-dev.google_compute_network_ID
+  subnet_id    = module.vpc-dev.subnet_1_id
+  count_nodes  = 1
+  serv_account = var.serv_account
+}
 
 # ------------------------------- OUTPUT ------------------------
 output "Terraform_google_compute_network" {
   value = module.vpc-dev.google_compute_network_ID
+}
+
+output "psql_private_ip" {
+  value = module.postgres-14.ip_private_psql
 }

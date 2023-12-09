@@ -42,3 +42,6 @@ variable "instance_count" {
   type = number
 }
 
+variable "serv_account" {
+  description = "e-mail service account"
+}

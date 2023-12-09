@@ -1,0 +1,94 @@
+name: 'Terragrunt'
+run-name: "Terragrunt GCP"
+
+env:
+  tf_version: '1.6.5'
+  tg_version: '0.53.8'
+  working_dir: ${{ vars.TG_WORK_DIR }}
+
+on:
+  workflow_run:
+    workflows: [ "Terragrunt Pipeline to Test app" ]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'info'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+      tags:
+        description: 'Pipeline Tags'
+        required: false
+      runner:
+        description: 'Runner to use:'
+        required: true
+        type: choice
+        default: 'ubuntu-latest'
+        options:
+          - ubuntu-latest
+          - self-hosted
+          - ubuntu-20.04
+  push:
+     paths:
+     - "terragrunt/**"
+     - "terraform/**"
+     branches: [ "main"]
+
+jobs:
+  Terragrunt:
+    name: 'Terragrunt'
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-20.04' }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.0.0
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2.0.3
+      with:
+         terraform_version: 1.6.5 # optional
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
+    - name: Terragrunt init
+      uses: gruntwork-io/terragrunt-action@v2
+      with:
+          tf_version: ${{ env.tf_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ${{ env.working_dir }}
+          tg_command: 'run-all init'
+  #        tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
+
+    - name: Terragrunt Plan
+      uses: gruntwork-io/terragrunt-action@v2
+      with:
+          tf_version: ${{ env.tf_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ${{ env.working_dir }}
+          tg_command: 'run-all plan'
+
+    - name: Terragrunt apply
+    # https://terragrunt.gruntwork.io/docs/reference/cli-options/#terragrunt-non-interactive
+      uses: gruntwork-io/terragrunt-action@v2
+      with:
+          tf_version: ${{ env.tf_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ${{ env.working_dir }}
+          tg_command: 'run-all apply -auto-approve'
+
+
