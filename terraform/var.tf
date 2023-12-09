@@ -45,3 +45,15 @@ variable "instance_count" {
 variable "serv_account" {
   description = "e-mail service account"
 }
+
+variable "chart_name" {
+  type = string
+}
+
+variable "chart_repository" {
+  default = "https://github.com/DTG-cisco/devops-team-green-2/tree/DTG-72_helm/kubernetes/schedule-app"
+}
+variable "pg_host" {
+  description = "Postgres SQL Host IP"
+  default     = "10.155.70.3"
+}

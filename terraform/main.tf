@@ -44,6 +44,14 @@ module "cluster" {
   serv_account = var.serv_account
 }
 
+module "helm" {
+  source           = "./modules/gcp_helm"
+  env              = var.env
+  chart_repository = var.chart_repository
+  chart_name       = var.chart_name
+  pg_host          = module.postgres-14.ip_private_psql
+}
+
 # ------------------------------- OUTPUT ------------------------
 output "Terraform_google_compute_network" {
   value = module.vpc-dev.google_compute_network_ID

@@ -5,5 +5,10 @@
   "gcp_project_id": "cisco-team-green",
   "zone": "us-west1-b",
   "region": "us-west1",
-  "serv_account": "awx-350@cisco-team-green.iam.gserviceaccount.com"
+  "serv_account": "awx-350@cisco-team-green.iam.gserviceaccount.com",
+
+  "chart_repository":  "https://github.com/DTG-cisco/devops-team-green-2/tree/DTG-72_helm/kubernetes/schedule-app",
+  "chart_name":  "schedule-app",
+  "pg_host": "10.155.70.3"
+
 }
