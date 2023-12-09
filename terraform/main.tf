@@ -48,3 +48,7 @@ module "cluster" {
 output "Terraform_google_compute_network" {
   value = module.vpc-dev.google_compute_network_ID
 }
+
+output "psql_private_ip" {
+  value = module.postgres-14.ip_private_psql
+}

@@ -12,6 +12,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
+#  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
   name       = "node-pool-${var.env}"
   location   = var.zone
   cluster    = google_container_cluster.primary.id
