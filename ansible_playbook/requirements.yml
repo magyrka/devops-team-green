@@ -8,5 +8,5 @@ collections:
     scm: git
 #    version: 3.4.11
   - name: ansible-thoteam.nexus3-oss
-    src: git@github.coom:ansible-ThoTeam/nexus3-oss
+    src: git@github.com:ansible-ThoTeam/nexus3-oss
     scm: git
