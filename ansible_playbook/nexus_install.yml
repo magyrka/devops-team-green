@@ -20,8 +20,6 @@
         last_name: CI
         email: support@company.com
         password: "{{ jenkins_pass }}"
-        roles:
-          - Developpers # role ID here
     nexus_blobstores:
       - name: docker-images
         path: /var/nexus/blobs/docker-images
