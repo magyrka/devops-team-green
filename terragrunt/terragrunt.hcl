@@ -6,6 +6,13 @@ provider "google" {
   project     = "cisco-team-green"
   region      = "us-west1"
 }
+
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
+
 EOF
 }
 
