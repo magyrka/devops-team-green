@@ -1,94 +1,38 @@
 ---
-- name: Nexus
+- name: Nexus install and configure
   hosts: 34.0.39.110
   become: yes
+
   vars:
-  - nexus_url: "http://34.0.39.110:8081"
-    nexus_api_version: "v1"
-    nexus_admin_username: "admin"
-    nexus_admin_password: "VArIDfBDVM24eeS"
-    docker_repository_name: "docker-repo"
-    docker_repository_type: "docker"
-    docker_repository_port: 5000
+    nexus_upgrade: true
+    nexus_admin_password: "{{ vault_nexus_admin_password }}"
+    nexus_public_hostname: 'nexus.vm'
+    nexus_public_scheme: https
+    httpd_setup_enable: true
+    httpd_ssl_certificate_file: "{{ vault_httpd_ssl_certificate_file }}"
+    httpd_ssl_certificate_key_file: "{{ vault_httpd_ssl_certificate_key_file }}"
+    nexus_delete_default_repos: true
+    
 
-  tasks:
-    - name: Update all packages
-      apt:
-        update_cache: yes
-        cache_valid_time: 3600
+    nexus_local_users:
+      - username: jenkins # used as key to update
+        first_name: Jenkins
+        last_name: CI
+        email: support@company.com
+        password: "{{ jenkins_pass }}"
+        roles:
+          - Developpers # role ID here
+    nexus_blobstores:
+      - name: docker-images
+        path: /var/nexus/blobs/docker-images
+    nexus_repos_docker_hosted: 
+      - name: team-greeen-docker-repo
+        write_policy: allow
+        blob_store: docker-images
+    nexus_docker_bearer_token_realm: true
 
-    - name: Install Java (OpenJDK 8)
-      apt:
-        name: openjdk-8-jre-headless
-        state: present
 
-    - name: Download Nexus tarball
-      get_url:
-        url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
-        dest: "/tmp/nexus-latest.tar.gz"
-
-    - name: Extract Nexus tarball
-      unarchive:
-        src: "/tmp/nexus-latest.tar.gz"
-        dest: "/opt"
-        remote_src: yes
-
-    - name: Rename Nexus directory
-      shell: "mv /opt/nexus* /opt/nexus"
-
-    - name: Add Nexus as a service
-      copy:
-        dest: "/etc/systemd/system/nexus.service"
-        content: |
-          [Unit]
-          Description=nexus service
-          After=network.target
-
-          [Service]
-          Type=forking
-          ExecStart=/opt/nexus/bin/nexus start
-          ExecStop=/opt/nexus/bin/nexus stop
-          User=root
-          Restart=on-abort
-
-          [Install]
-          WantedBy=multi-user.target
-
-    - name: Enable and start Nexus service
-      systemd:
-        name: nexus
-        enabled: yes
-        state: started
-
-    - name: Create Docker Repository
-      uri:
-        url: "{{ nexus_url }}/service/rest/beta/repositories/docker/docker"
-        method: POST
-        user: "{{ nexus_admin_username }}"
-        password: "{{ nexus_admin_password }}"
-        status_code: 201
-        body: '{"name":"{{ docker_repository_name }}","online":true,"storage":{"blobStoreName":"default","strictContentTypeValidation":true,"writePolicy":"ALLOW_ONCE"}}'
-        headers:
-          Content-Type: "application/json"
-
-    - name: Enable Docker V1 API
-      uri:
-        url: "{{ nexus_url }}/service/rest/{{ nexus_api_version }}/docker/repositories/{{ docker_repository_name }}"
-        method: PUT
-        user: "{{ nexus_admin_username }}"
-        password: "{{ nexus_admin_password }}"
-        status_code: 204
-        body: '{"docker.v1":true}'
-        headers:
-          Content-Type: "application/json"
-
-    - name: Update Docker Repository Port
-      uri:
-        url: "{{ nexus_url }}/service/rest/beta/repositories/docker/docker/{{ docker_repository_name }}"
-        method: PUT
-        user: "{{ nexus_admin_username }}"
-        password: "{{ nexus_admin_password }}"
-        status_code: 204
-        body: '{"port":{{ docker_repository_port }}}'
-        headers:
-          Content-Type: "application/json"
+  roles:
+    - { role: geerlingguy.java, vars: See role doc for your distribution/version }
+    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy.load", "proxy_http.load", "headers.load", "ssl.load", "rewrite.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
+    - { role: ansible-thoteam.nexus3-oss, tags: ['ansible-thoteam.nexus3-oss'] }
