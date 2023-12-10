@@ -7,3 +7,6 @@ collections:
     src: git@github.com:ansible-collections/community.docker.git
     scm: git
 #    version: 3.4.11
+  - name: ansible-thoteam.nexus3-oss
+    src: git@github.coom:ansible-ThoTeam/nexus3-oss
+    scm: git
