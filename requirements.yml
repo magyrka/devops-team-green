@@ -1,7 +1,6 @@
 roles:
   - name: geerlingguy.java
-    java_packages:
-     openjdk-8-jre-headless
+    java_packages: openjdk-8-jre-headless
      
   - name: geerlingguy.apache
     apache_create_vhosts: no 
