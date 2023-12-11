@@ -8,19 +8,19 @@ locals {
   kubernetes_instance_type = "e2-small"
   serv_account             = "awx-350@cisco-team-green.iam.gserviceaccount.com"
   app = {
-    name ="schedule-helm"
+    name          = "schedule-helm"
     deploy        = 1
     chart         = "schedule-app"
     wait          = false
     recreate_pods = false
     version       = "0.1.2"
   }
-  namespace = "app"
+  namespace  = "app"
   repository = "https://vitalikys.github.io/chart/"
-#  repository = "s3://vit-helm.io/charts"
-#  chart  ="schedule/schedule-app"
+  #  repository = "s3://vit-helm.io/charts"
+  #  chart  ="schedule/schedule-app"
 
-#  repository = "https://helm.nginx.com/stable"
-#  chart  ="nginx-ingress"
-#  chart  ="kubernetes/schedule-app/Chart"
+  #  repository = "https://helm.nginx.com/stable"
+  #  chart  ="nginx-ingress"
+  #  chart  ="kubernetes/schedule-app/Chart"
 }

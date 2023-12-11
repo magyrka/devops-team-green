@@ -62,3 +62,7 @@ For consistent HCL (HashiCorp Configuration Language) formatting across your pro
 terragrunt hclfmt
 ```
 
+  * rolebindings.rbac.authorization.k8s.io is forbidden: User 
+  * "awx-350@cisco-team-green.iam.gserviceaccount.com"
+  * cannot create resource "rolebindings" in API group "rbac.authorization.k8s.io" in the namespace 
+  * "consul": requires one of ["container.roleBindings.create"] permission(s).

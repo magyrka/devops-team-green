@@ -35,3 +35,25 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     ]
   }
 }
+
+resource "kubernetes_namespace" "app" {
+  metadata {
+    annotations = {
+      name = "app"
+    }
+
+    labels = {
+      author = "vitaliy"
+    }
+
+    name = "terraform-schedule-namespace"
+  }
+}
+
+output "cluster_id" {
+  value = google_container_cluster.primary.id
+}
+
+output "cluster_location" {
+  value = google_container_cluster.primary.location
+}

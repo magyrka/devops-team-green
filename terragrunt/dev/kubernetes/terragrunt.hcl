@@ -4,13 +4,13 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE Kuber CLUSTER -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster?ref=DTG-75-Add-Helm-to-terraform"
 }
 dependency "vpc" {
   config_path                             = "../vpc"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    subnet_1_id =  "projects/cisco-team-green/global/networks/tg-vpc-dev"
+    subnet_1_id               = "projects/cisco-team-green/global/networks/tg-vpc-dev"
     google_compute_network_ID = "projects/cisco-team-green/global/networks/tf-vpc-prod"
   }
 }
