@@ -26,7 +26,7 @@
     - name: Build and Push Docker image to Docker Hub
       docker_image:
         name: "schedule-app"
-        tag: "latest"
+        tag: "v1"
         repository: "{{ DH_REPO }}"
         build:
           path: "{{ APP_PATH }}"
