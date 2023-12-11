@@ -29,3 +29,6 @@ provider "helm" {
     config_path = "~/.kube/config"
   }
 }
+#provider "kubernetes" {
+#  host     = module.cluster.cluster_endpoint
+#}

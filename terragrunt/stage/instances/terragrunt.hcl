@@ -10,8 +10,8 @@ dependency "vpc" {
   config_path                             = "../vpc"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    subnet_1_id               = "projects/cisco-team-green/regions/us-west2/subnetworks/tf-subnet-dev-0"
-    google_compute_network_ID = "projects/cisco-team-green/global/networks/tf-vpc-prod"
+    subnet_1_id               = "projects/mock/tf-vpc-prod/tf-subnet-dev-0"
+    google_compute_network_ID = "projects/mock/tf-vpc-prod"
   }
 }
 

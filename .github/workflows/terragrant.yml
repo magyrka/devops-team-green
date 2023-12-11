@@ -82,13 +82,13 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: 'run-all plan'
 
-    - name: Terragrunt apply
+    - name: Terragrunt "select from secrets"
     # https://terragrunt.gruntwork.io/docs/reference/cli-options/#terragrunt-non-interactive
       uses: gruntwork-io/terragrunt-action@v2
       with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'run-all apply -auto-approve'
+          tg_command: "run-all ${{ vars.TG_COMMAND }} -auto-approve"
 
 

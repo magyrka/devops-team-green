@@ -60,3 +60,7 @@ output "Terraform_google_compute_network" {
 output "psql_private_ip" {
   value = module.postgres-14.ip_private_psql
 }
+
+output "cluster_endpoint" {
+  value = module.cluster.cluster_endpoint
+}
