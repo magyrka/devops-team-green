@@ -15,5 +15,5 @@ roles:
     apache_remove_default_vhost: true
     tags: ["geerlingguy.apache"]
 
-  #- name: ansible-thoteam.nexus3-oss
-  #  tags: ["ansible-thoteam.nexus3-oss"]
+  - name: ansible-thoteam.nexus3-oss
+    tags: ["ansible-thoteam.nexus3-oss"]
