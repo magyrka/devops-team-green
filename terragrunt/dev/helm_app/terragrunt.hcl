@@ -51,11 +51,11 @@ inputs = {
     },
     {
       name  = "backend_image.name"
-      value = "stratiiv/devops-team-green"
+      value = get_env("IMAGE_NAME", "stratiiv/devops-team-green")
     },
     {
       name  = "backend_image.tag"
-      value = "latest"
+      value = get_env("IMAGE_DEV_TAG", "latest")
     },
     {
       name  = "PG_USER"
@@ -65,16 +65,6 @@ inputs = {
       name  = "PG_HOST"
       value = dependency.pg_db.outputs.ip_private_psql
     },
-#    {
-#      name  = "PG_PASS"
-#      value = "schedule"
-#    },
   ]
 
-  #  set_sensitive = [
-  #    {
-  #      name  = "PG_PASS"
-  #      value = "schedule"
-  #    },
-  #  ]
 }

@@ -62,7 +62,26 @@ For consistent HCL (HashiCorp Configuration Language) formatting across your pro
 terragrunt hclfmt
 ```
 
-  * rolebindings.rbac.authorization.k8s.io is forbidden: User 
-  * "awx-350@cisco-team-green.iam.gserviceaccount.com"
-  * cannot create resource "rolebindings" in API group "rbac.authorization.k8s.io" in the namespace 
-  * "consul": requires one of ["container.roleBindings.create"] permission(s).
+----------------------
+How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env)
+```text
+get_env(NAME, DEFAULT)
+remote_state {
+  backend = "s3"
+  config = {
+    bucket = get_env("BUCKET")
+  }
+}
+```
+
+```text
+{
+      name  = "backend_image.tag"
+#      https://developer.hashicorp.com/terraform/language/expressions/conditionals
+      value = var.DOCKER_DEV_IMAGE_VERSION != "" ? var.DOCKER_DEV_IMAGE_VERSION : "latest"
+},
+```
+
+```shell
+tg run-all plan -var DOCKER_DEV_IMAGE_VERSION=0.1.2
+```
