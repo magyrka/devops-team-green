@@ -17,10 +17,4 @@ locals {
   }
   namespace  = "app"
   repository = "https://vitalikys.github.io/chart/"
-  #  repository = "s3://vit-helm.io/charts"
-  #  chart  ="schedule/schedule-app"
-
-  #  repository = "https://helm.nginx.com/stable"
-  #  chart  ="nginx-ingress"
-  #  chart  ="kubernetes/schedule-app/Chart"
 }

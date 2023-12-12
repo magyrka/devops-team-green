@@ -55,5 +55,4 @@ variable "chart_repository" {
 }
 variable "pg_host" {
   description = "Postgres SQL Host IP"
-  default     = "10.155.70.3"
 }

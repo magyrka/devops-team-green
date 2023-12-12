@@ -1,4 +1,5 @@
 resource "google_container_cluster" "primary" {
+  #  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster
   name                = "tf-cluster-${var.env}"
   location            = var.zone
   network             = var.network_ID
@@ -12,7 +13,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-#  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
+  #  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
   name       = "node-pool-${var.env}"
   location   = var.zone
   cluster    = google_container_cluster.primary.id
@@ -46,4 +47,10 @@ output "cluster_location" {
 }
 output "cluster_endpoint" {
   value = google_container_cluster.primary.endpoint
+}
+output "cluster_certificate" {
+  value = google_container_cluster.primary.master_auth.0.cluster_ca_certificate
+}
+output "client_certificate" {
+  value = google_container_cluster.primary.master_auth.0.client_certificate
 }

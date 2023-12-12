@@ -3,9 +3,6 @@ terraform {
     bucket      = "gt-tfstate"
     prefix      = "terraform/state"
     credentials = "cisco-team-green.json"
-
-    #    workspace_key_prefix = 12 # new # not ok
-    #    encrypt              = true
   }
 
   required_providers {
@@ -23,12 +20,3 @@ provider "google" {
   region      = var.region
   zone        = var.zone
 }
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-#provider "kubernetes" {
-#  host     = module.cluster.cluster_endpoint
-#}

@@ -2,10 +2,9 @@
 module "vpc-dev" {
   source     = "./modules/gcp_network"
   cidr_range = var.cidr_range
-  vpc_name   = "tf-vpc-${var.env}"
+  vpc_name   = "t-vpc-${var.env}"
   region     = var.region
   env        = var.env
-
 }
 
 module "instance-jenkins" {
@@ -46,10 +45,54 @@ module "cluster" {
 
 module "helm" {
   source           = "./modules/gcp_helm"
+  kuber_host       = "https://${module.cluster.cluster_endpoint}"
   env              = var.env
   chart_repository = var.chart_repository
   chart_name       = var.chart_name
   pg_host          = module.postgres-14.ip_private_psql
+
+  app = {
+    name          = "schedule-helm"
+    deploy        = 1
+    chart         = "schedule-app"
+    wait          = false
+    recreate_pods = false
+    version       = "0.1.2"
+  }
+  namespace  = "default"
+  repository = "https://vitalikys.github.io/chart/"
+
+  set = [
+    #    https://github.com/terraform-module/terraform-helm-release
+    {
+      name  = "appName"
+      value = "schedule-app"
+    },
+    {
+      name  = "namespace"
+      value = "default"
+    },
+    {
+      name  = "backend_image.name"
+      value = "stratiiv/devops-team-green"
+    },
+    {
+      name  = "backend_image.tag"
+      value = "latest"
+    },
+    {
+      name  = "PG_USER"
+      value = "schedule"
+    },
+    {
+      name  = "PG_HOST"
+      value = module.postgres-14.ip_private_psql
+    },
+    {
+      name  = "PG_PASS"
+      value = data.google_secret_manager_secret_version.postgres_password.secret_data
+    },
+  ]
 }
 
 # ------------------------------- OUTPUT ------------------------
@@ -63,4 +106,12 @@ output "psql_private_ip" {
 
 output "cluster_endpoint" {
   value = module.cluster.cluster_endpoint
+}
+
+#output "mongo_private_IP" {
+#  value = module.instance-mongo.google_compute_private_IP
+#}
+
+output "kuber_host" {
+  value = "https://${module.cluster.cluster_endpoint}"
 }

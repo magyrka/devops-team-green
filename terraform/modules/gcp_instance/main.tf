@@ -38,14 +38,14 @@ resource "google_compute_instance" "default" {
   }
 }
 
-output "google_compute_instance_IP" {
-  value = google_compute_instance.default[0].network_interface.0.access_config.0.nat_ip
+output "google_compute_public_IP" {
+  value = google_compute_instance.default[0].network_interface[0].access_config[0].nat_ip
   #  value = google_compute_instance.default.ip
 }
 
-output "google_compute_private_IP" {
-  value = google_compute_instance.default[0].network_interface.0.network_ip
-  #  value = google_compute_instance.default.ip
-}
+#output "google_compute_private_IP" {
+#  value = google_compute_instance.default.network_interface.0.network_ip
+#  #  value = google_compute_instance.default.ip
+#}
 
 

@@ -4,8 +4,8 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE Kuber CLUSTER -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster"
-#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster?ref=DTG-75-Add-Helm-to-terraform"
+#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_cluster?ref=DTG-75-Add-Helm-to-terraform"
 }
 dependency "vpc" {
   config_path                             = "../vpc"

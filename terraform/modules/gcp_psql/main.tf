@@ -52,6 +52,6 @@ data "google_secret_manager_secret_version" "postgres_password" {
 }
 
 output "ip_private_psql" {
-  value =  google_sql_database_instance.postgres.ip_address.0.ip_address
+  value = google_sql_database_instance.postgres.ip_address.0.ip_address
 }
 

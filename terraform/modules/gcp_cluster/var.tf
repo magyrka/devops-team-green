@@ -8,7 +8,7 @@ variable "network_ID" {
   type = string
 }
 variable "subnet_id" {
-  type    = string
+  type        = string
   description = "Take it from Net module"
 }
 

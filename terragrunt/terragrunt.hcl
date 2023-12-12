@@ -10,6 +10,8 @@ provider "google" {
 provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
+    host =  "https://34.102.65.77"
+    insecure = true
   }
 }
 
