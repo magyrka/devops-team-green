@@ -34,7 +34,7 @@ resource "helm_release" "this" {
 
   set_sensitive {
     name  = "PG_PASS"
-    value = data.google_secret_manager_secret_version.pg_password.secret
+    value = data.google_secret_manager_secret_version.pg_password.secret_data
   }
 
   dynamic "set" {
