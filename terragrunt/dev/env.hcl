@@ -15,6 +15,7 @@ locals {
     recreate_pods = false
     version       = "0.1.2"
   }
-  namespace  = "app"
+  namespace  = "default"
   repository = "https://vitalikys.github.io/chart/"
+  chart_name = "schedule-app"
 }

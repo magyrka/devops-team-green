@@ -4,7 +4,7 @@
 #
 #terraform {
 #  #  https://registry.terraform.io/modules/terraform-module/release/helm/latest
-#  source = "tfr:///terraform-module/release/helm?version=2.8.1"
+#  source = "tfr:///terraform-module/release/helm_app?version=2.8.1"
 #}
 #
 #inputs = {
