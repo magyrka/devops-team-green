@@ -36,21 +36,3 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     ]
   }
 }
-
-
-output "cluster_id" {
-  value = google_container_cluster.primary.id
-}
-
-output "cluster_location" {
-  value = google_container_cluster.primary.location
-}
-output "cluster_endpoint" {
-  value = google_container_cluster.primary.endpoint
-}
-output "cluster_certificate" {
-  value = google_container_cluster.primary.master_auth.0.cluster_ca_certificate
-}
-output "client_certificate" {
-  value = google_container_cluster.primary.master_auth.0.client_certificate
-}

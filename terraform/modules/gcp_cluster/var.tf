@@ -7,6 +7,7 @@ variable "zone" {
 variable "network_ID" {
   type = string
 }
+
 variable "subnet_id" {
   type        = string
   description = "Take it from Net module"

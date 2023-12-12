@@ -39,7 +39,6 @@ inputs = {
   chart_name = "${local.chart_n}"
   repository = "${local.repository}"
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
-  pg_host = dependency.pg_db.outputs.ip_private_psql
   set = [
     #    https://github.com/terraform-module/terraform-helm-release
     {
@@ -66,10 +65,10 @@ inputs = {
       name  = "PG_HOST"
       value = dependency.pg_db.outputs.ip_private_psql
     },
-    {
-      name  = "PG_PASS"
-      value = "schedule"
-    },
+#    {
+#      name  = "PG_PASS"
+#      value = "schedule"
+#    },
   ]
 
   #  set_sensitive = [

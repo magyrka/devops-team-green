@@ -49,7 +49,6 @@ module "helm" {
   env              = var.env
   chart_repository = var.chart_repository
   chart_name       = var.chart_name
-  pg_host          = module.postgres-14.ip_private_psql
 
   app = {
     name          = "schedule-helm"

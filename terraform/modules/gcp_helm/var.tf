@@ -16,10 +16,6 @@ variable "kuber_host" {
   default     = "https://34.102.65.77"
 }
 
-variable "pg_host" {
-  type = string
-}
-
 variable "namespace" {
   description = "namespace where to deploy an application"
   type        = string

@@ -32,6 +32,11 @@ resource "helm_release" "this" {
   timeout                    = lookup(var.app, "timeout", 300)
   values                     = var.values
 
+  set_sensitive {
+    name  = "PG_PASS"
+    value = data.google_secret_manager_secret_version.pg_password.secret
+  }
+
   dynamic "set" {
     iterator = item
     for_each = var.set == null ? [] : var.set

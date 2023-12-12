@@ -17,7 +17,7 @@ The project is organized into several directories:
 
 ### Usage
 - Genetate ssh key-pair for new instances (if needed) in the terraform directory  
-- Add secret PG_PASSWORD to GCP Secret Manager (nedded for Postgres DB)
+- Add secret PG_PASSWORD to GCP Secret Manager (nedded for Postgres DB). This value will be given to GCP_Helm chart module.
 - Add required variables to files `terraform/workspace_vars/prod.json`, example:
 ```text
 {
