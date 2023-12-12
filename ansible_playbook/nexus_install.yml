@@ -26,12 +26,12 @@
     nexus_config_docker: true
     
 
-    nexus_local_users:
-      - username: jenkins # used as key to update
-        first_name: Jenkins
-        last_name: CI
-        email: support@company.com
-        password: "{{ jenkins_pass }}"
+    # nexus_local_users:
+    #   - username: jenkins # used as key to update
+    #     first_name: Jenkins
+    #     last_name: CI
+    #     email: support@company.com
+    #     password: "{{ jenkins_pass }}"
 
     nexus_blobstores:
       - name: docker-images
