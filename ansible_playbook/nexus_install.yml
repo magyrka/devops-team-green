@@ -22,6 +22,8 @@
     httpd_ssl_certificate_file: "{{ vault_httpd_ssl_certificate_file }}"
     httpd_ssl_certificate_key_file: "{{ vault_httpd_ssl_certificate_key_file }}"
     nexus_delete_default_repos: true
+    nexus_docker_bearer_token_realm: true
+    nexus_config_docker: true
     
 
     nexus_local_users:
@@ -38,11 +40,11 @@
       - name: team-greeen-docker-repo
         write_policy: allow
         blob_store: docker-images
-    nexus_docker_bearer_token_realm: true
+
 
 
 
   roles:
     - { role: geerlingguy.java, java_packages: openjdk-8-jre-headless }
-    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy.load", "proxy_http.load", "headers.load", "ssl.load", "rewrite.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
+#    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy.load", "proxy_http.load", "headers.load", "ssl.load", "rewrite.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
     - { role: ansible-thoteam.nexus3-oss, tags: ['ansible-thoteam.nexus3-oss'] }
