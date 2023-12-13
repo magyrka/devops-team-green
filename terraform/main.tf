@@ -5,7 +5,7 @@ module "vpc-dev" {
   vpc_name       = "t-vpc-${var.env}"
   region         = var.region
   env            = var.env
-  gcp_project_id = var.gcp_project_id
+  project_id     = var.gcp_project_id
 }
 
 module "instance-jenkins" {

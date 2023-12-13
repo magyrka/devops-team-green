@@ -16,7 +16,7 @@ variable "zone" {
   default = "europe-west9-a"
 }
 
-variable "gcp_project_id" {
+variable "project_id" {
   description = "Google Project ID"
   type        = string
 }

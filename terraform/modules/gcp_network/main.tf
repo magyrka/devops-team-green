@@ -37,7 +37,7 @@ resource "google_compute_router" "router" {
 resource "google_compute_global_address" "private_ip_address" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_address
   # https://registry.terraform.io/providers/hashicorp/google/5.5.0/docs/resources/sql_database_instance
-  project       = var.gcp_project_id
+  project       = var.project_id
   name          = "small-ip-address-${var.env}"
   purpose       = "VPC_PEERING" #  "PRIVATE_SERVICE_CONNECT"
   address_type  = "INTERNAL"
