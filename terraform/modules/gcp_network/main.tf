@@ -7,10 +7,19 @@ resource "google_compute_network" "vpc_network" {
   routing_mode                    = "REGIONAL"
 }
 
-resource "google_compute_subnetwork" "private" {
+/*resource "google_compute_subnetwork" "private" {
   count                    = 2
   name                     = "tf-subnet-${var.env}-${count.index}"
   ip_cidr_range            = element(var.cidr_range, count.index)
+  region                   = var.region
+  network                  = google_compute_network.vpc_network.id
+  private_ip_google_access = true
+}*/
+
+resource "google_compute_subnetwork" "private" {
+  count                    = 1
+  name                     = "tf-subnet-${var.env}"
+  ip_cidr_range            = var.cidr_range
   region                   = var.region
   network                  = google_compute_network.vpc_network.id
   private_ip_google_access = true
@@ -29,7 +38,7 @@ resource "google_compute_global_address" "private_ip_address" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_address
   # https://registry.terraform.io/providers/hashicorp/google/5.5.0/docs/resources/sql_database_instance
   project       = var.gcp_project_id
-  name          = "small-private-ip-address-${var.env}"
+  name          = "small-ip-address-${var.env}"
   purpose       = "VPC_PEERING" #  "PRIVATE_SERVICE_CONNECT"
   address_type  = "INTERNAL"
   prefix_length = 24

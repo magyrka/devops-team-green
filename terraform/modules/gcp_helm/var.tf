@@ -7,13 +7,13 @@ variable "chart_name" {
 }
 
 variable "chart_repository" {
-  default = "https://github.com/DTG-cisco/devops-team-green-2/tree/DTG-73-Move-TF-to-Terragrunt/kubernetes/schedule-app"
+  description = "path to chart repo"
+  type        = string
 }
 
 variable "kuber_host" {
   description = "url to reach Cluster"
   type        = string
-  default     = "https://34.102.65.77"
 }
 
 variable "namespace" {

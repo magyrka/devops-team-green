@@ -7,6 +7,7 @@ resource "google_compute_instance" "default" {
   count               = var.instance_count
   deletion_protection = var.delete_protection
 
+
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
@@ -27,7 +28,9 @@ resource "google_compute_instance" "default" {
   }
 
   metadata_startup_script = "sudo apt-get update; sudo apt-get install -y nano"
-
+  metadata = {
+    ssh-keys = "ubuntu: ${var.pub_key_ssh}"
+  }
   network_interface {
     subnetwork = var.subnet_id
     # network_ip = (Optional) The private IP address to assign to the instance.
@@ -37,15 +40,5 @@ resource "google_compute_instance" "default" {
     }
   }
 }
-
-output "google_compute_public_IP" {
-  value = google_compute_instance.default[0].network_interface[0].access_config[0].nat_ip
-  #  value = google_compute_instance.default.ip
-}
-
-#output "google_compute_private_IP" {
-#  value = google_compute_instance.default.network_interface.0.network_ip
-#  #  value = google_compute_instance.default.ip
-#}
 
 

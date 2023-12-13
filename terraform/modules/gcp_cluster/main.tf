@@ -1,6 +1,7 @@
 resource "google_container_cluster" "primary" {
   #  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster
   name                = "tf-cluster-${var.env}"
+  description         = "Custom module"
   location            = var.zone
   network             = var.network_ID
   subnetwork          = var.subnet_id

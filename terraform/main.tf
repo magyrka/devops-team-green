@@ -1,10 +1,11 @@
 # ---------- Define our Modules ------------
 module "vpc-dev" {
-  source     = "./modules/gcp_network"
-  cidr_range = var.cidr_range
-  vpc_name   = "t-vpc-${var.env}"
-  region     = var.region
-  env        = var.env
+  source         = "./modules/gcp_network"
+  cidr_range     = var.cidr_range
+  vpc_name       = "t-vpc-${var.env}"
+  region         = var.region
+  env            = var.env
+  gcp_project_id = var.gcp_project_id
 }
 
 module "instance-jenkins" {
@@ -14,12 +15,13 @@ module "instance-jenkins" {
   machine_type      = "e2-micro" # 2 vCPU + 1 GB memory
   subnet_id         = module.vpc-dev.subnet_1_id
   delete_protection = false # true
+  zone              = var.zone
 }
 
 module "instance-mongo" {
   source        = "./modules/gcp_instance"
   instance_name = "mongo-${var.env}"
-  count         = 0
+  count         = 1
   machine_type  = "e2-micro"
   zone          = var.zone
   subnet_id     = module.vpc-dev.subnet_1_id
@@ -99,18 +101,31 @@ output "Terraform_google_compute_network" {
   value = module.vpc-dev.google_compute_network_ID
 }
 
+output "kuber_host" {
+  value = "https://${module.cluster.cluster_endpoint}"
+}
+
+# -------------------- Instances  OUTPUT ------------------------
+output "mongo_private_ip" {
+  value = module.instance-mongo.0.instance_private_IP
+}
+
+output "mongo_public_ip" {
+  value = module.instance-mongo.0.instance_public_IP
+}
+
 output "psql_private_ip" {
   value = module.postgres-14.ip_private_psql
+}
+# -------------------- Cluster  OUTPUT ------------------------
+output "cluster_ca_certificate" {
+  value = module.cluster.cluster_ca_certificate
+}
+
+output "client_certificate" {
+  value = module.cluster.client_certificate
 }
 
 output "cluster_endpoint" {
   value = module.cluster.cluster_endpoint
-}
-
-#output "mongo_private_IP" {
-#  value = module.instance-mongo.google_compute_private_IP
-#}
-
-output "kuber_host" {
-  value = "https://${module.cluster.cluster_endpoint}"
 }

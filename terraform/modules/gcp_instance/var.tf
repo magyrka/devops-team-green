@@ -7,28 +7,22 @@ variable "instance_count" {
 }
 
 variable "zone" {
-  default = "europe-west9-a"
+  description = "zone, for example: europe-west9-a"
 }
 
 variable "machine_type" {
   type    = string
   default = "e2-micro"
 }
-variable "credentials_json" {
-  description = "Json File with Credentials"
-  default     = "./cisco-team-green.json"
-}
-
-variable "gcp_project_id" {
-  description = "Google Project ID"
-  type        = string
-  default     = "cisco-team-green"
-}
 
 variable "subnet_id" {
-  default = "Take it from Net module"
+  description = "Take it from Net module"
 }
 
 variable "delete_protection" {
   default = false
+}
+variable "pub_key_ssh" {
+  description = "Public SSH key to access to instance"
+  default     = ""
 }

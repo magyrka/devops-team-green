@@ -3,10 +3,6 @@ output "subnet_1_id" {
   value = google_compute_subnetwork.private[0].id
 }
 
-output "subnet_2_id" {
-  value = google_compute_subnetwork.private[1].id
-}
-
 output "google_compute_network_ID" {
   value = google_compute_network.vpc_network.id
 }
