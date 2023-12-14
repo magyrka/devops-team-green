@@ -6,10 +6,10 @@ variable "chart_name" {
   type = string
 }
 
-variable "chart_repository" {
-  description = "path to chart repo"
-  type        = string
-}
+#variable "chart_repository" {
+#  description = "path to chart repo"
+#  type        = string
+#}
 
 variable "kuber_host" {
   description = "url to reach Cluster"

@@ -23,11 +23,15 @@ dependency "cluster_ip" {
   }
 }
 
+dependency "cluster_namespaces" {
+  config_path = "../kuber_namespaces"
+  skip_outputs = true
+}
+
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
   app              = local.environment_vars.locals.app
-  namespace        = local.environment_vars.locals.namespace
   repository       = local.environment_vars.locals.repository
   chart_n          = local.environment_vars.locals.chart_name
 }
@@ -35,7 +39,7 @@ locals {
 inputs = {
   app        = "${local.app}"
   env        = "${local.env}"
-  namespace  = "${local.namespace}"
+  namespace  = "app"
   chart_name = "${local.chart_n}"
   repository = "${local.repository}"
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
@@ -47,7 +51,7 @@ inputs = {
     },
     {
       name  = "namespace"
-      value = "default"
+      value = "app"
     },
     {
       name  = "backend_image.name"
