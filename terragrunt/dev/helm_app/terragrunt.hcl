@@ -34,6 +34,10 @@ locals {
   app              = local.environment_vars.locals.app
   repository       = local.environment_vars.locals.repository
   chart_n          = local.environment_vars.locals.chart_name
+
+  cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
+  client_certificate = dependency.cluster_ip.outputs.client_certificate
+  client_key = dependency.cluster_ip.outputs.client_key
 }
 
 inputs = {

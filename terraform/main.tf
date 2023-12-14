@@ -44,7 +44,7 @@ module "cluster" {
   count_nodes  = 1
   serv_account = var.serv_account
 }
-
+/*
 module "helm" {
   source           = "./modules/gcp_helm"
   kuber_host       = "https://${module.cluster.cluster_endpoint}"
@@ -95,7 +95,7 @@ module "helm" {
     },
   ]
 }
-
+*/
 # ------------------------------- OUTPUT ------------------------
 output "Terraform_google_compute_network" {
   value = module.vpc-dev.google_compute_network_ID

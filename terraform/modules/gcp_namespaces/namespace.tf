@@ -1,8 +1,3 @@
-variable "namespace" {
-  default = ["consul", "app", "monitoring"]
-  type    = list(string)
-}
-
 #https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace
 resource "kubernetes_namespace" "app" {
   count                            = length(var.namespace)
