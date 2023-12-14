@@ -1,11 +1,11 @@
 # ---------- Define our Modules ------------
 module "vpc-dev" {
-  source         = "./modules/gcp_network"
-  cidr_range     = var.cidr_range
-  vpc_name       = "t-vpc-${var.env}"
-  region         = var.region
-  env            = var.env
-  project_id     = var.gcp_project_id
+  source     = "./modules/gcp_network"
+  cidr_range = var.cidr_range
+  vpc_name   = "t-vpc-${var.env}"
+  region     = var.region
+  env        = var.env
+  project_id = var.gcp_project_id
 }
 
 module "instance-jenkins" {
