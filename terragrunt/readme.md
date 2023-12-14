@@ -62,6 +62,20 @@ For consistent HCL (HashiCorp Configuration Language) formatting across your pro
 terragrunt hclfmt
 ```
 
+### Destroy specific resource 
+Delete only one, for example Kubernetes Cluster 
+```shell
+cd /terragrunt/dev/kubernetes
+terragrunt destroy target=kubernetes
+```
+
+You will be asked about dependencies:
+```text
+Detected dependent modules:
+/terragrunt/dev/helm_app
+/terragrunt/dev/helm_consol
+/terragrunt/dev/kuber_namespaces
+```
 ----------------------
 How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env)
 ```text
