@@ -99,3 +99,21 @@ remote_state {
 ```shell
 tg run-all plan -var DOCKER_DEV_IMAGE_VERSION=0.1.2
 ```
+https://developer.hashicorp.com/consul/docs/k8s/helm
+
+-------------------------
+## Consul for Kubernetes
+
+This repository facilitates the installation of Consul within our Kubernetes cluster using Terragrunt. 
+The installation is managed via the `helm_consul` module, utilizing the Helm chart sourced from HashiCorp's Consul for Kubernetes repository.
+
+### Installation Steps:
+- Terragrunt Setup:
+Ensure Terragrunt is installed and configured properly. 
+- Deploy Consul:
+Use Terragrunt to deploy Consul to your Kubernetes cluster.
+- Helm [Chart Source](https://github.com/hashicorp/consul-k8s) :
+The Helm chart used for Consul installation is retrieved from HashiCorp's Consul for Kubernetes repository. 
+For detailed configuration options and chart specifics, refer to the Helm chart documentation provided in the repository.
+
+

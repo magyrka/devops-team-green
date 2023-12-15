@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
+  #  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
   source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm?ref=DTG-75-Add-Helm-to-terraform"
 }
 dependency "pg_db" {
@@ -16,17 +16,17 @@ dependency "pg_db" {
 }
 
 dependency "cluster_ip" {
-  config_path = "../kubernetes"
+  config_path                             = "../kubernetes"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
     cluster_endpoint = "10.10.10.10"
   }
 }
 
-dependency "cluster_namespaces" {
-  config_path = "../kuber_namespaces"
-  skip_outputs = true
-}
+#dependency "cluster_namespaces" {
+#  config_path = "../kuber_namespaces"
+#  skip_outputs = true
+#}
 
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
@@ -72,7 +72,7 @@ inputs = {
   ]
 
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
-  client_certificate = dependency.cluster_ip.outputs.client_certificate
-  client_key = dependency.cluster_ip.outputs.client_key
+  client_certificate     = dependency.cluster_ip.outputs.client_certificate
+  client_key             = dependency.cluster_ip.outputs.client_key
 
 }

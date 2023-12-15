@@ -8,13 +8,26 @@ locals {
   kubernetes_instance_type = "e2-small"
   serv_account             = "awx-350@cisco-team-green.iam.gserviceaccount.com"
   app = {
-    name          = "schedule-helm"
-    deploy        = 1
-    chart         = "schedule-app"
-    wait          = false
-    recreate_pods = false
-    version       = "0.1.2"
+    name             = "schedule-helm"
+    deploy           = 1
+    chart            = "schedule-app"
+    wait             = false
+    recreate_pods    = false
+    version          = "0.1.2"
+    create_namespace = true
   }
+
+  app_consul = {
+    name             = "consul-tg"
+    deploy           = 1
+    chart            = "consul"
+    wait             = false
+    recreate_pods    = false
+    version          = "1.3.0"
+    create_namespace = true
+  }
+
+  # For Application
   namespace  = "default"
   repository = "https://vitalikys.github.io/chart/"
   chart_name = "schedule-app"

@@ -1,3 +1,4 @@
+/*
 include "root" {
   path = find_in_parent_folders()
 }
@@ -29,3 +30,4 @@ inputs = {
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
 #  kuber_host = "https://34.94.192.173"
 }
+*/
