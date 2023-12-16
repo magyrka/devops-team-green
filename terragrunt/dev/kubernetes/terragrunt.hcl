@@ -35,7 +35,7 @@ inputs = {
   count_nodes  = "${local.count_nodes}"
   region       = "${local.region}"
   serv_account = "${local.serv_account}"
-  node_machine_type = "${local.serv_account}"
+  node_machine_type = "${local.node_clust_type}"
 }
 
 #dependencies {
