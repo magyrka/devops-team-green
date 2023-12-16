@@ -14,4 +14,5 @@ resource "google_compute_router_nat" "nat" {
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address
 resource "google_compute_address" "nat_ip_address" {
   name = "nat-ip-${var.env}"
+  region = var.region
 }

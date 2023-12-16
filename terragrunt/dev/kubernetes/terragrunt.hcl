@@ -24,6 +24,7 @@ locals {
   zone             = local.environment_vars.locals.zone
   count_nodes      = local.environment_vars.locals.count_nodes
   serv_account     = local.environment_vars.locals.serv_account
+  node_clust_type  = local.environment_vars.locals.node_machine_type
 }
 
 inputs = {
@@ -34,6 +35,7 @@ inputs = {
   count_nodes  = "${local.count_nodes}"
   region       = "${local.region}"
   serv_account = "${local.serv_account}"
+  node_machine_type = "${local.serv_account}"
 }
 
 #dependencies {

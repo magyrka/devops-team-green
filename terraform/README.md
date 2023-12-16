@@ -26,14 +26,18 @@ The project is organized into several directories:
   "zone": "us-west1-b",
   "region": "us-west1",
   "instance_count": 0,
-  "cidr_range": ["10.0.30.0/24", "10.0.31.0/24"]
+  "cidr_range": "10.0.30.0/24"
 }
 ```
-- Modify resource configurations in main.tf (for example):
+- Modify resource Instance configurations in main.tf (for example):
 ```text
 machine_type  = "e2-micro"      # 2 vCPU + 1 GB memory
 machine_type  = "e2-medium"     # 2 vCPU + 4 GB memory
 machine_type  = "e2-standard-2" # 2 vCPU + 8 GB memory
+```
+- Node Type for Kubernetes Cluster
+```text 
+node_machine_type   = "e2-small"
 ```
 
 - Create local workspaces (prod, stage, dev) using commands:

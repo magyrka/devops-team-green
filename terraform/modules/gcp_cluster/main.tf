@@ -26,11 +26,12 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "e2-medium"
+    machine_type = var.node_machine_type
+    disk_size_gb = 30
+
     labels = {
       author = "vitaliy-k"
     }
-
     service_account = var.serv_account
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"

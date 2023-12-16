@@ -19,3 +19,7 @@ variable "count_nodes" {
 variable "serv_account" {
   type = string
 }
+
+variable "node_machine_type" {
+  description = "instance for kubernetes cluster, e.g. e2-medium"
+}

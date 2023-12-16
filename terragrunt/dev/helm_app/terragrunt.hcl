@@ -20,6 +20,9 @@ dependency "cluster_ip" {
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
     cluster_endpoint = "10.10.10.10"
+    cluster_ca_certificate = ""
+    client_certificate    = ""
+    client_key = ""
   }
 }
 

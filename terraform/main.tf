@@ -43,6 +43,7 @@ module "cluster" {
   subnet_id    = module.vpc-dev.subnet_1_id
   count_nodes  = 1
   serv_account = var.serv_account
+  node_machine_type = "e2-small"
 }
 /*
 module "helm" {

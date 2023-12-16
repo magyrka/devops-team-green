@@ -11,7 +11,10 @@ dependency "cluster_ip" {
   config_path                             = "../kubernetes"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    cluster_endpoint = "10.10.10.10"
+    cluster_endpoint       = "10.10.10.10"
+    cluster_ca_certificate = "mock"
+    client_certificate    = "mock"
+    client_key = "mock"
   }
 }
 
@@ -26,7 +29,16 @@ locals {
 }
 
 inputs = {
-  app                    = "${local.app_consul}"
+  app                    =  {
+    name             = "consul-tg"
+    deploy           = 1
+    chart            = "consul"
+    wait             = false
+    recreate_pods    = false
+    version          = "1.3.0"
+    create_namespace = true
+  }
+  values = ["${file("consul-config.yaml")}" ]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
   client_certificate     = dependency.cluster_ip.outputs.client_certificate
   client_key             = dependency.cluster_ip.outputs.client_key
