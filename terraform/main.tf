@@ -36,22 +36,28 @@ module "postgres-14" {
 }
 
 module "cluster" {
-  source       = "./modules/gcp_cluster"
-  env          = var.env
-  zone         = var.zone
-  network_ID   = module.vpc-dev.google_compute_network_ID
-  subnet_id    = module.vpc-dev.subnet_1_id
-  count_nodes  = 1
-  serv_account = var.serv_account
+  source            = "./modules/gcp_cluster"
+  env               = var.env
+  zone              = var.zone
+  network_ID        = module.vpc-dev.google_compute_network_ID
+  subnet_id         = module.vpc-dev.subnet_1_id
+  count_nodes       = 1
+  serv_account      = var.serv_account
   node_machine_type = "e2-small"
 }
-/*
+
 module "helm" {
-  source           = "./modules/gcp_helm"
-  kuber_host       = "https://${module.cluster.cluster_endpoint}"
-  env              = var.env
-  chart_repository = var.chart_repository
-  chart_name       = var.chart_name
+  # install our application via helm, source on repo
+  source     = "./modules/gcp_helm"
+  kuber_host = "https://${module.cluster.cluster_endpoint}"
+  env        = var.env
+  repository = var.chart_repository
+  chart_name = var.chart_name
+  namespace  = "default"
+
+  client_certificate     = module.cluster.client_certificate
+  client_key             = module.cluster.client_key
+  cluster_ca_certificate = module.cluster.cluster_ca_certificate
 
   app = {
     name          = "schedule-helm"
@@ -61,8 +67,6 @@ module "helm" {
     recreate_pods = false
     version       = "0.1.2"
   }
-  namespace  = "default"
-  repository = "https://vitalikys.github.io/chart/"
 
   set = [
     #    https://github.com/terraform-module/terraform-helm-release
@@ -95,38 +99,4 @@ module "helm" {
       value = data.google_secret_manager_secret_version.postgres_password.secret_data
     },
   ]
-}
-*/
-# ------------------------------- OUTPUT ------------------------
-output "Terraform_google_compute_network" {
-  value = module.vpc-dev.google_compute_network_ID
-}
-
-output "kuber_host" {
-  value = "https://${module.cluster.cluster_endpoint}"
-}
-
-# -------------------- Instances  OUTPUT ------------------------
-output "mongo_private_ip" {
-  value = module.instance-mongo.0.instance_private_IP
-}
-
-output "mongo_public_ip" {
-  value = module.instance-mongo.0.instance_public_IP
-}
-
-output "psql_private_ip" {
-  value = module.postgres-14.ip_private_psql
-}
-# -------------------- Cluster  OUTPUT ------------------------
-output "cluster_ca_certificate" {
-  value = module.cluster.cluster_ca_certificate
-}
-
-output "client_certificate" {
-  value = module.cluster.client_certificate
-}
-
-output "cluster_endpoint" {
-  value = module.cluster.cluster_endpoint
 }

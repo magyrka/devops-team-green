@@ -35,7 +35,6 @@ variable "pub_key_path" {
 variable "cidr_range" {
   type        = string
   description = "The range of internal addresses that are owned by this subnetwork."
-
 }
 
 variable "instance_count" {
@@ -51,5 +50,5 @@ variable "chart_name" {
 }
 
 variable "chart_repository" {
-  default = "https://github.com/DTG-cisco/devops-team-green-2/tree/DTG-72_helm/kubernetes/schedule-app"
+  default = "https://vitalikys.github.io/chart/"
 }
