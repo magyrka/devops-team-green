@@ -13,9 +13,14 @@ dependency "cluster_ip" {
   mock_outputs = {
     cluster_endpoint       = "10.10.10.10"
     cluster_ca_certificate = "mock"
-    client_certificate    = "mock"
-    client_key = "mock"
+    client_certificate     = "mock"
+    client_key             = "mock"
   }
+}
+
+dependency "cluster_namespaces" {
+  config_path  = "../kuber_namespaces"
+  skip_outputs = true
 }
 
 locals {
@@ -23,12 +28,12 @@ locals {
   env              = local.environment_vars.locals.environment
   app              = local.environment_vars.locals.app_consul
   namespace        = local.environment_vars.locals.namespace
-#  repository       = local.environment_vars.locals.repository
-  chart_n = local.environment_vars.locals.chart_name
+  chart_n          = local.environment_vars.locals.chart_name
+  #  repository       = local.environment_vars.locals.repository
 }
 
 inputs = {
-  app                    =  {
+  app = {
     name             = "consul-tg"
     deploy           = 1
     chart            = "consul"
@@ -37,7 +42,7 @@ inputs = {
     version          = "1.3.0"
     create_namespace = true
   }
-  values = ["${file("consul-config.yaml")}" ]
+  values                 = ["${file("consul-config.yaml")}"]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
   client_certificate     = dependency.cluster_ip.outputs.client_certificate
   client_key             = dependency.cluster_ip.outputs.client_key

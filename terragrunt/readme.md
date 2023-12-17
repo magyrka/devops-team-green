@@ -83,17 +83,9 @@ get_env(NAME, DEFAULT)
 remote_state {
   backend = "s3"
   config = {
-    bucket = get_env("BUCKET")
+    bucket = get_env("BUCKET", "default_bucket")
   }
 }
-```
-
-```text
-{
-      name  = "backend_image.tag"
-#      https://developer.hashicorp.com/terraform/language/expressions/conditionals
-      value = var.DOCKER_DEV_IMAGE_VERSION != "" ? var.DOCKER_DEV_IMAGE_VERSION : "latest"
-},
 ```
 
 ```shell

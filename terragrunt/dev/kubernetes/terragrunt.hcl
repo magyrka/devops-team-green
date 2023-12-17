@@ -28,13 +28,13 @@ locals {
 }
 
 inputs = {
-  network_ID   = dependency.vpc.outputs.google_compute_network_ID
-  subnet_id    = dependency.vpc.outputs.subnet_1_id
-  env          = "${local.env}"
-  zone         = "${local.zone}"
-  count_nodes  = "${local.count_nodes}"
-  region       = "${local.region}"
-  serv_account = "${local.serv_account}"
+  network_ID        = dependency.vpc.outputs.google_compute_network_ID
+  subnet_id         = dependency.vpc.outputs.subnet_1_id
+  env               = "${local.env}"
+  zone              = "${local.zone}"
+  count_nodes       = "${local.count_nodes}"
+  region            = "${local.region}"
+  serv_account      = "${local.serv_account}"
   node_machine_type = "${local.node_clust_type}"
 }
 

@@ -1,4 +1,3 @@
-/*
 include "root" {
   path = find_in_parent_folders()
 }
@@ -20,17 +19,17 @@ dependency "cluster_ip" {
   config_path                             = "../kubernetes"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    cluster_endpoint = "10.10.10.10"
+    cluster_endpoint       = "10.10.10.10"
     cluster_ca_certificate = ""
-    client_certificate    = ""
-    client_key = ""
+    client_certificate     = ""
+    client_key             = ""
   }
 }
 
-#dependency "cluster_namespaces" {
-#  config_path = "../kuber_namespaces"
-#  skip_outputs = true
-#}
+dependency "cluster_namespaces" {
+  config_path  = "../kuber_namespaces"
+  skip_outputs = true
+}
 
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
@@ -80,4 +79,3 @@ inputs = {
   client_key             = dependency.cluster_ip.outputs.client_key
 
 }
-*/
