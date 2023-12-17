@@ -4,7 +4,8 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
+#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network?ref=DTG-75-Add-Helm-to-terraform"
+    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
 }
 
 locals {
@@ -17,7 +18,7 @@ locals {
 
 inputs = {
   cidr_range = "${local.cidr_range}"
-  vpc_name   = "tg-vpc-${local.env}"
+  vpc_name   = "vpc-${local.env}"
   region     = "${local.region}"
   env        = "${local.env}"
   project_id = "${local.project_id}"

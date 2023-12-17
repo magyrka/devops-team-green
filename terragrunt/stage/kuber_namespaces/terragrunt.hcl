@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
+    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces"
 #  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces?ref=DTG-75-Add-Helm-to-terraform"
 }
 
@@ -21,7 +21,6 @@ dependency "cluster_ip" {
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   namespace        = local.environment_vars.locals.namespace
-  #  repository       = local.environment_vars.locals.repository
 }
 
 inputs = {
@@ -30,5 +29,4 @@ inputs = {
   client_key             = dependency.cluster_ip.outputs.client_key
   namespace              = ["consul", "app", "monitoring", "customnames"]
   kuber_host             = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
-  #  kuber_host = "https://34.94.192.173"
 }

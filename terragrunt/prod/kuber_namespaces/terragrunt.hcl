@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
+    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces"
 #  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces?ref=DTG-75-Add-Helm-to-terraform"
 }
 
