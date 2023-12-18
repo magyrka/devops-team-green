@@ -4,14 +4,15 @@ include "root" {
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_psql"
+    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_psql"
+#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_psql?ref=DTG-75-Add-Helm-to-terraform"
 }
 dependency "vpc" {
   config_path                             = "../vpc"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
   mock_outputs = {
-    private_vpc_con           = "projects%2Fcisco-team-green%2Fglobal%2Fnetworks%2Ftf-vpc-prod:servicenetworking.googleapis.com"
-    google_compute_network_ID = "projects/cisco-team-green/global/networks/tf-vpc-prod"
+    private_vpc_con           = "projects/Mock-networks-vpc-prodgoogleapis.com"
+    google_compute_network_ID = "projects/Mock-green/global/networks/tf-vpc-prod"
   }
 }
 

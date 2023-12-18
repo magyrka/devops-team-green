@@ -10,12 +10,12 @@ EOF
 }
 
 remote_state {
-#  backend = "local"
+  #  backend = "local"
   backend = "gcs"
   config = {
     project = "cisco-team-green"
-    bucket = "gt-tfstate"
-    prefix = "terragrunt/${path_relative_to_include()}"
+    bucket  = "gt-tfstate"
+    prefix  = "terragrunt/${path_relative_to_include()}"
   }
   generate = {
     path      = "backend.tf"

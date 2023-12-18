@@ -25,6 +25,7 @@ For optimal usage, consider installing Terragrunt via binary files.
 sudo apt-get update
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update && sudo apt-get install google-cloud-cli
 ```
 
 #### Login to GCP locally 
@@ -32,6 +33,11 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 gcloud auth login
 gcloud auth login --cred-file=cisco-team-green.json
 export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/your-gcp-credentials.json"
+```
+
+[Inastall](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke) Kubectl authentication plugin 
+```shell
+sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
 ---------------------------
 ### Usage
@@ -55,3 +61,51 @@ For consistent HCL (HashiCorp Configuration Language) formatting across your pro
 ```shell
 terragrunt hclfmt
 ```
+
+### Destroy specific resource 
+Delete only one, for example Kubernetes Cluster 
+```shell
+cd /terragrunt/dev/kubernetes
+terragrunt destroy target=kubernetes
+```
+
+You will be asked about dependencies:
+```text
+Detected dependent modules:
+/terragrunt/dev/helm_app
+/terragrunt/dev/helm_consol
+/terragrunt/dev/kuber_namespaces
+```
+----------------------
+How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env)
+```text
+get_env(NAME, DEFAULT)
+remote_state {
+  backend = "s3"
+  config = {
+    bucket = get_env("BUCKET", "default_bucket")
+  }
+}
+```
+
+```shell
+tg run-all plan -var DOCKER_DEV_IMAGE_VERSION=0.1.2
+```
+https://developer.hashicorp.com/consul/docs/k8s/helm
+
+-------------------------
+## Consul for Kubernetes
+
+This repository facilitates the installation of Consul within our Kubernetes cluster using Terragrunt. 
+The installation is managed via the `helm_consul` module, utilizing the Helm chart sourced from HashiCorp's Consul for Kubernetes repository.
+
+### Installation Steps:
+- Terragrunt Setup:
+Ensure Terragrunt is installed and configured properly. 
+- Deploy Consul:
+Use Terragrunt to deploy Consul to your Kubernetes cluster.
+- Helm [Chart Source](https://github.com/hashicorp/consul-k8s) :
+The Helm chart used for Consul installation is retrieved from HashiCorp's Consul for Kubernetes repository. 
+For detailed configuration options and chart specifics, refer to the Helm chart documentation provided in the repository.
+
+

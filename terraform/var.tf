@@ -33,9 +33,8 @@ variable "pub_key_path" {
 }
 
 variable "cidr_range" {
-  type        = list(string)
-  description = "List of The range of internal addresses that are owned by this subnetwork."
-  default     = ["10.0.10.0/24", "10.0.20.0/24"]
+  type        = string
+  description = "The range of internal addresses that are owned by this subnetwork."
 }
 
 variable "instance_count" {
@@ -44,4 +43,12 @@ variable "instance_count" {
 
 variable "serv_account" {
   description = "e-mail service account"
+}
+
+variable "chart_name" {
+  type = string
+}
+
+variable "chart_repository" {
+  default = "https://vitalikys.github.io/chart/"
 }

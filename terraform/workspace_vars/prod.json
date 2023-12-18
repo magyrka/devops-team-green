@@ -4,6 +4,9 @@
   "zone": "us-west1-b",
   "region": "us-west1",
   "instance_count": 0,
-  "cidr_range": ["10.0.30.0/24", "10.0.31.0/24"],
-  "serv_account": "awx-350@cisco-team-green.iam.gserviceaccount.com"
+  "cidr_range": "10.0.30.0/24",
+  "serv_account": "awx-350@cisco-team-green.iam.gserviceaccount.com",
+
+  "chart_repository":  "https://vitalikys.github.io/chart/",
+  "chart_name":  "schedule-app"
 }

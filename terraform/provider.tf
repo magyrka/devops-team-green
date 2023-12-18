@@ -3,9 +3,6 @@ terraform {
     bucket      = "gt-tfstate"
     prefix      = "terraform/state"
     credentials = "cisco-team-green.json"
-
-    #    workspace_key_prefix = 12 # new # not ok
-    #    encrypt              = true
   }
 
   required_providers {
