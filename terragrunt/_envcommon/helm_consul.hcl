@@ -1,10 +1,9 @@
-include "root" {
-  path = find_in_parent_folders()
+terraform {
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
 }
 
-terraform {
-    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
-#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm?ref=DTG-75-Add-Helm-to-terraform"
+dependencies {
+  paths = ["../vpc", "../kubernetes", "../kuber_namespaces"]
 }
 
 dependency "cluster_ip" {
@@ -28,28 +27,28 @@ locals {
   env              = local.environment_vars.locals.environment
   app              = local.environment_vars.locals.app_consul
   namespace        = local.environment_vars.locals.namespace
-  chart_n          = local.environment_vars.locals.chart_name
-  #  repository       = local.environment_vars.locals.repository
+  chart_n          = local.environment_vars.locals.chart_name_consul
+  repository       = local.environment_vars.locals.repository_consul
 }
 
 inputs = {
   app = {
-    name             = "consul-tg"
+    name             = "consul"
     deploy           = 1
     chart            = "consul"
     wait             = false
     recreate_pods    = false
-    version          = "1.3.0"
+    version          = "1.3.1"
     create_namespace = true
   }
-  values                 = ["${file("consul-config.yaml")}"]
+#  values                 = ["${file("consul-config.yaml")}"]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
   client_certificate     = dependency.cluster_ip.outputs.client_certificate
   client_key             = dependency.cluster_ip.outputs.client_key
 
   env        = "${local.env}"
-  namespace  = "consul"
-  chart_name = "consul"
-  repository = "https://helm.releases.hashicorp.com"
+  namespace  = "${local.namespace}"
+  chart_name = "${local.chart_n}"
+  repository = "${local.repository}"
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
 }
