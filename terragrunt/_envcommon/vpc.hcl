@@ -1,7 +1,7 @@
 # -----------  WILL USE OWN (Custom) MODULE -----------
 
 terraform {
-    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_network"
 }
 
 locals {

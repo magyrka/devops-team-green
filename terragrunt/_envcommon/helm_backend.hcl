@@ -1,6 +1,15 @@
 terraform {
   source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
 }
+
+dependencies {
+  paths = ["../kubernetes", "../helm_consul"]
+}
+
+dependency "mongo_db" {
+  config_path = "../instances"
+}
+
 dependency "pg_db" {
   config_path                             = "../pg_db"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
@@ -29,10 +38,13 @@ dependency "cluster_namespaces" {
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
-  app              = local.environment_vars.locals.app
+  app              = local.environment_vars.locals.app_back
   repository       = local.environment_vars.locals.repo_front
   chart_n          = local.environment_vars.locals.chart_front
   namespace_app    = local.environment_vars.locals.namespace
+
+  be_img_name = local.environment_vars.locals.backend_image_name
+  be_img_tag  = local.environment_vars.locals.backend_image_name
 }
 
 inputs = {
@@ -54,11 +66,11 @@ inputs = {
     },
     {
       name  = "backend_image.name"
-      value = get_env("IMAGE_NAME", "stratiiv/devops-team-green")
+      value = get_env("IMAGE_NAME", "${local.be_img_name}")
     },
     {
       name  = "frontend_image.tag"
-      value = get_env("IMAGE_DEV_TAG", "v1")
+      value = get_env("IMAGE_DEV_TAG", "${local.be_img_tag}")
     },
     {
       name  = "postgres.db_user"
@@ -68,14 +80,14 @@ inputs = {
       name  = "postgres.db_host"
       value = dependency.pg_db.outputs.ip_private_psql
     },
-#    "${dependency.pg_db.pg_passw}"
+    #    dependency.pg_db.pg_passw
     {
       name  = "postgres.db_password"
       value = "schedule"
     },
     {
       name  = "mongodb.host"
-      value = "10.0.12.13"
+      value = dependency.mongo_db.outputs.instance_private_IP
     },
   ]
 

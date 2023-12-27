@@ -1,7 +1,12 @@
 terraform {
   source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
-# source = "tfr:///terraform-module/release/helm?version=2.8.1"
+  # source = "tfr:///terraform-module/release/helm?version=2.8.1"
 }
+
+dependencies {
+  paths = ["../kubernetes", "../helm_consul", "../helm_backend"]
+}
+
 dependency "pg_db" {
   config_path                             = "../pg_db"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
@@ -30,10 +35,13 @@ dependency "cluster_namespaces" {
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
-  app              = local.environment_vars.locals.app
+  app              = local.environment_vars.locals.app_front
   repository       = local.environment_vars.locals.repo_front
   chart_n          = local.environment_vars.locals.chart_front
   namespace_app    = local.environment_vars.locals.namespace
+
+  fe_img_name = local.environment_vars.locals.frontend_image_name
+  fe_img_tag  = local.environment_vars.locals.frontend_image_tag
 }
 
 inputs = {
@@ -55,11 +63,11 @@ inputs = {
     },
     {
       name  = "frontend_image.name"
-      value = get_env("IMAGE_NAME", "nexus.green-team-schedule.pp.ua/frontend")
+      value = get_env("IMAGE_NAME", "${local.fe_img_name}")
     },
     {
       name  = "frontend_image.tag"
-      value = get_env("IMAGE_DEV_TAG", "1.0.1")
+      value = get_env("IMAGE_DEV_TAG", "${local.fe_img_tag}")
     },
   ]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
