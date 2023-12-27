@@ -54,4 +54,17 @@ locals {
     version          = "0.1.1"
     create_namespace = true
   }
+
+  # For API Gateway (helm)
+  repo_api_gw        = "https://dtg-cisco.github.io/helm-charts/"
+  chart_api_gw       = "api-gateway"
+  app_api_gw = {
+    name             = "api-gw"
+    deploy           = 1
+    chart            = "api-gateway"
+    wait             = false
+    recreate_pods    = false
+    version          = "0.1.1"
+    create_namespace = true
+  }
 }
