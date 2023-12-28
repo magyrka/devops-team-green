@@ -10,6 +10,10 @@ dependency "mongo_db" {
   config_path = "../instances"
 }
 
+dependency "secret_manager" {
+  config_path = "../secret_manager"
+}
+
 dependency "pg_db" {
   config_path                             = "../pg_db"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
@@ -44,7 +48,7 @@ locals {
   namespace_app    = local.environment_vars.locals.namespace
 
   be_img_name = local.environment_vars.locals.backend_image_name
-  be_img_tag  = local.environment_vars.locals.backend_image_name
+  be_img_tag  = local.environment_vars.locals.backend_image_tag
 }
 
 inputs = {
@@ -54,6 +58,7 @@ inputs = {
   chart_name = "${local.chart_n}"
   repository = "${local.repository}"
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
+
   set = [
     #    https://github.com/terraform-module/terraform-helm-release
     {
@@ -69,7 +74,7 @@ inputs = {
       value = get_env("IMAGE_NAME", "${local.be_img_name}")
     },
     {
-      name  = "frontend_image.tag"
+      name  = "backend_image.tag"
       value = get_env("IMAGE_DEV_TAG", "${local.be_img_tag}")
     },
     {
@@ -80,15 +85,22 @@ inputs = {
       name  = "postgres.db_host"
       value = dependency.pg_db.outputs.ip_private_psql
     },
-    #    dependency.pg_db.pg_passw
-    {
-      name  = "postgres.db_password"
-      value = "schedule"
-    },
     {
       name  = "mongodb.host"
       value = dependency.mongo_db.outputs.instance_private_IP
+    }
+  ]
+
+  set_sensitive = [
+    # Kubernetes Secret Will be created via charts/backend/template/secret.yaml
+    {
+      path  = "nexus.token"
+      value = dependency.secret_manager.outputs.nexus_token
     },
+    {
+      path  = "postgres.db_password"
+      value = dependency.secret_manager.outputs.pg_passw
+    }
   ]
 
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate

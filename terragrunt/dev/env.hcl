@@ -26,8 +26,7 @@ locals {
   namespace_app = "app"
   repo_front    = "https://dtg-cisco.github.io/helm-charts/"
   chart_front   = "frontend"
-  #  frontend_image_name = "nexus.green-team-schedule.pp.ua/frontend"
-  frontend_image_name = "vitalikys/frontend"
+  frontend_image_name = "nexus.green-team-schedule.pp.ua/frontend"
   frontend_image_tag  = "1.0.1"
 
   app_front = {
@@ -36,22 +35,22 @@ locals {
     chart            = "frontend"
     wait             = false
     recreate_pods    = false
-    version          = "0.1.2"
+    version          = "0.1.3"
     create_namespace = true
   }
 
   # For Backend App (helm)
   repo_back          = "https://dtg-cisco.github.io/helm-charts/"
   chart_back         = "backend"
-  backend_image_name = "stratiiv/devops-team-green"
-  backend_image_tag  = "v1"
+  backend_image_name = "nexus.green-team-schedule.pp.ua/backend"
+  backend_image_tag  = "1.0.0"
   app_back = {
     name             = "app-back"
     deploy           = 1
     chart            = "backend"
     wait             = false
     recreate_pods    = false
-    version          = "0.1.1"
+    version          = "0.1.2"
     create_namespace = true
   }
 
