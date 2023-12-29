@@ -83,13 +83,13 @@ jobs:
           tg_command: 'run-all init'
   #        tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
 
-    - name: Terragrunt Plan
+    - name: Terragrunt Validate
       uses: gruntwork-io/terragrunt-action@v2
       with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'run-all plan'
+          tg_command: 'run-all validate'
 
     - name: Terragrunt "select from secrets"
     # https://terragrunt.gruntwork.io/docs/reference/cli-options/#terragrunt-non-interactive
