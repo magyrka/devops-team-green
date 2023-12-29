@@ -3,9 +3,14 @@ include "root" {
 }
 
 terraform {
-    source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
-#  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm?ref=DTG-75-Add-Helm-to-terraform"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
+  # source = "tfr:///terraform-module/release/helm?version=2.8.1"
 }
+
+dependencies {
+  paths = ["../kubernetes", "../helm_consul", "../helm_backend"]
+}
+
 dependency "pg_db" {
   config_path                             = "../pg_db"
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
@@ -34,48 +39,42 @@ dependency "cluster_namespaces" {
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   env              = local.environment_vars.locals.environment
-  app              = local.environment_vars.locals.app
-  repository       = local.environment_vars.locals.repository
-  chart_n          = local.environment_vars.locals.chart_name
+  app              = local.environment_vars.locals.app_front
+  repository       = local.environment_vars.locals.repo_front
+  chart_n          = local.environment_vars.locals.chart_front
+  namespace_app    = local.environment_vars.locals.namespace
+
+  fe_img_name = local.environment_vars.locals.frontend_image_name
+  fe_img_tag  = local.environment_vars.locals.frontend_image_tag
 }
 
 inputs = {
   app        = "${local.app}"
   env        = "${local.env}"
-  namespace  = "app"
+  namespace  = "${local.namespace_app}"
   chart_name = "${local.chart_n}"
   repository = "${local.repository}"
   kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
   set = [
     #    https://github.com/terraform-module/terraform-helm-release
     {
-      name  = "appName"
-      value = "schedule-app"
+      name  = "service.name"
+      value = "frontend"
     },
     {
       name  = "namespace"
-      value = "app"
+      value = "${local.namespace_app}"
     },
     {
-      name  = "backend_image.name"
-      value = get_env("IMAGE_NAME", "stratiiv/devops-team-green")
+      name  = "frontend_image.name"
+      value = get_env("IMAGE_NAME", "${local.fe_img_name}")
     },
     {
-      name  = "backend_image.tag"
-      value = get_env("IMAGE_DEV_TAG", "latest")
-    },
-    {
-      name  = "PG_USER"
-      value = "schedule"
-    },
-    {
-      name  = "PG_HOST"
-      value = dependency.pg_db.outputs.ip_private_psql
+      name  = "frontend_image.tag"
+      value = get_env("FR_IMAGE_PROD_TAG", "${local.fe_img_tag}")
     },
   ]
-
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
   client_certificate     = dependency.cluster_ip.outputs.client_certificate
   client_key             = dependency.cluster_ip.outputs.client_key
-
 }

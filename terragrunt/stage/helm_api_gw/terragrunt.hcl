@@ -3,5 +3,5 @@ include "root" {
 }
 
 include "envcommon" {
-  path = "${dirname(find_in_parent_folders())}/_envcommon/pg_db.hcl"
+  path = "${dirname(find_in_parent_folders())}/_envcommon/helm_api_gw.hcl"
 }

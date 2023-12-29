@@ -1,3 +1,7 @@
+include "root" {
+  path = find_in_parent_folders()
+}
+
 terraform {
   source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
 }
@@ -75,7 +79,7 @@ inputs = {
     },
     {
       name  = "backend_image.tag"
-      value = get_env("IMAGE_DEV_TAG", "${local.be_img_tag}")
+      value = get_env("BE_IMAGE_STAGE_TAG", "${local.be_img_tag}")
     },
     {
       name  = "postgres.db_user"

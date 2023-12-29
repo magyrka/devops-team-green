@@ -34,6 +34,15 @@ on:
           - ubuntu-latest
           - self-hosted
           - ubuntu-20.04
+      environment:
+        description: 'Env to use:'
+        required: true
+        type: choice
+        default: 'dev'
+        options:
+          - dev
+          - stage
+          - prod
   push:
      paths:
      - "terragrunt/**"
