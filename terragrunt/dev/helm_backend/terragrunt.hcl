@@ -16,6 +16,11 @@ dependency "mongo_db" {
 
 dependency "secret_manager" {
   config_path = "../secret_manager"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan", "destroy"]
+  mock_outputs = {
+    nexus_token  = "mock_token"
+    pg_passw     = "mock_password"
+  }
 }
 
 dependency "pg_db" {

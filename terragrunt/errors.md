@@ -1,6 +1,6 @@
 ### Common Errors when running Terragrunt:
 
-### LoadBalancer IP is always <pending>
+### LoadBalancer IP is always `<pending>`
 Reason:
 ```text
 NAMESPACE     NAME                     TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S) 
@@ -12,8 +12,10 @@ Warning  SyncLoadBalancerFailed  89s (x10 over 22m)   service-controller
 Error syncing load balancer: failed to ensure load balancer: failed to create forwarding rule for load balancer (afe5955ae6fac499ea7143d94ea61381(consul/gateway-front)): 
 googleapi: Error 403: QUOTA_EXCEEDED - Quota 'IN_USE_ADDRESSES' exceeded.  Limit: 4.0 globally.
 ```
+how to fix:
+Delete some unused [LoadBalancer IP](https://console.cloud.google.com/net-services/loadbalancing/list/loadBalancers)
 
-
+------------------------------------------
 ### Cluster with only One node: "e2-medium" (need minimum 3)
 
 ```text
