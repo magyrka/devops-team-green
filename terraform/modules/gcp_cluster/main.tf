@@ -1,6 +1,6 @@
 resource "google_container_cluster" "primary" {
   #  https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster
-  name                = "tf-cluster-${var.env}"
+  name                = "cluster-${var.env}"
   description         = "Custom module"
   location            = var.zone
   network             = var.network_ID
@@ -19,15 +19,10 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   location   = var.zone
   cluster    = google_container_cluster.primary.id
   node_count = var.count_nodes
-  #  autoscaling {
-  #    min_node_count = 1
-  #    max_node_count = 4
-  #  }
-
   node_config {
     preemptible  = true
     machine_type = var.node_machine_type
-    disk_size_gb = 30
+    disk_size_gb = 38
 
     labels = {
       author = "vitaliy-k"

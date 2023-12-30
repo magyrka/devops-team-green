@@ -77,20 +77,25 @@ Detected dependent modules:
 /terragrunt/dev/kuber_namespaces
 ```
 ----------------------
-How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env)
+How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env) for example frontend image tag:
 ```text
 get_env(NAME, DEFAULT)
-remote_state {
-  backend = "s3"
-  config = {
-    bucket = get_env("BUCKET", "default_bucket")
-  }
+{
+   name  = "frontend_image.tag"
+   value = get_env("FR_IMAGE_DEV_TAG", "${local.fe_img_tag}")
 }
 ```
 
 ```shell
-tg run-all plan -var DOCKER_DEV_IMAGE_VERSION=0.1.2
+terragrunt run-all plan -var FR_IMAGE_DEV_TAG=1.0.1
 ```
+here list of variables for Docker image Tags:
+- Environment Dev:
+  - BE_IMAGE_DEV_TAG
+  - FR_IMAGE_DEV_TAG
+- Environment Stage:
+  - BE_IMAGE_STAGE_TAG
+  - FR_IMAGE_STAGE_TAG
 https://developer.hashicorp.com/consul/docs/k8s/helm
 
 -------------------------

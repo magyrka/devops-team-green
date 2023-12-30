@@ -1,0 +1,47 @@
+# https://developer.hashicorp.com/consul/tutorials/kubernetes/kubernetes-deployment-guide
+# https://github.com/hashicorp/consul-k8s/blob/main/charts/consul/values.yaml
+# Enable and configure the Consul UI.
+ui:
+  enabled: true
+  service:
+    type: LoadBalancer
+#  metrics:
+#    enabled: true
+#    provider: "prometheus"
+#    # The URL of the prometheus metrics server.
+#    baseURL: "http://prometheus-operator.consul.svc.cluster.local:9090"
+
+global:
+  enabled: true
+  name: consul
+  datacenter: gcp-dev
+  tls:
+    enabled: true
+  acls:
+    # If true, automatically manage ACL tokens and policies for all Consul components.
+    manageSystemACLs: true
+#  metrics:
+#    enabled: true
+#    enableAgentMetrics: true
+#    agentMetricsRetentionTime: "1m"
+
+server:
+  enabled: true
+  # The number of server agents to run. This determines the fault tolerance of the cluster.
+  replicas: 1
+
+# Enable Consul connect pod injection
+connectInject:
+  enabled: true
+  default: true
+#  metrics:
+#    defaultEnabled: true
+#    defaultEnableMerging: true
+  apiGateway:
+    managedGatewayClass:
+      serviceType: LoadBalancer
+
+# Reach Other DC
+#meshGateway:
+#  enabled: true
+#  replicas: 1
