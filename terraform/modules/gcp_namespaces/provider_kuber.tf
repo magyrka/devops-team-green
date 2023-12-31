@@ -11,8 +11,3 @@ data "google_container_cluster" "default" {
 }
 
 data "google_client_config" "default" {}
-
-output "token" {
-  value     = data.google_client_config.default.access_token
-  sensitive = true
-}

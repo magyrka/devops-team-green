@@ -71,6 +71,5 @@ inputs = {
     },
   ]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
-  client_certificate     = dependency.cluster_ip.outputs.client_certificate
-  client_key             = dependency.cluster_ip.outputs.client_key
+
 }

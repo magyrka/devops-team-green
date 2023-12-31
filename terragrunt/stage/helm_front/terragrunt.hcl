@@ -43,14 +43,15 @@ locals {
   repository       = local.environment_vars.locals.repo_front
   chart_n          = local.environment_vars.locals.chart_front
   namespace_app    = local.environment_vars.locals.namespace
-
-  fe_img_name = local.environment_vars.locals.frontend_image_name
-  fe_img_tag  = local.environment_vars.locals.frontend_image_tag
+  zone             = local.environment_vars.locals.zone
+  fe_img_name      = local.environment_vars.locals.frontend_image_name
+  fe_img_tag       = local.environment_vars.locals.frontend_image_tag
 }
 
 inputs = {
   app        = "${local.app}"
   env        = "${local.env}"
+  zone       = "${local.zone}"
   namespace  = "${local.namespace_app}"
   chart_name = "${local.chart_n}"
   repository = "${local.repository}"
