@@ -37,14 +37,11 @@ inputs = {
     version          = "1.3.1"
     create_namespace = true
   }
-  #  values                 = ["${file("consul-config.yaml")}"]
-  #  client_certificate     = dependency.cluster_ip.outputs.client_certificate
-  #  client_key             = dependency.cluster_ip.outputs.client_key
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
   zone                   = "${local.zone}"
-  env        = "${local.env}"
-  namespace  = "${local.namespace}"
-  chart_name = "${local.chart_n}"
-  repository = "${local.repository}"
-  kuber_host = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
+  env                    = "${local.env}"
+  namespace              = "${local.namespace}"
+  chart_name             = "${local.chart_n}"
+  repository             = "${local.repository}"
+  kuber_host             = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
 }
