@@ -1,5 +1,5 @@
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces?ref=DTG-102-fix-mock-output-in-terragrunt-secrets"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces"
 }
 
 dependencies {
