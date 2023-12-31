@@ -1,3 +1,11 @@
+variable "env" {
+  type = string
+}
+
+variable "zone" {
+  type = string
+}
+
 variable "kuber_host" {
   description = "url to reach Cluster"
   type        = string

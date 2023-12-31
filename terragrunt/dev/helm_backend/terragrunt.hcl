@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_helm?ref=DTG-102-fix-mock-output-in-terragrunt-secrets"
 }
 
 dependencies {

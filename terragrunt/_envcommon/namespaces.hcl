@@ -1,5 +1,5 @@
 terraform {
-  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces"
+  source = "git::https://github.com/DTG-cisco/devops-team-green-2.git//terraform/modules/gcp_namespaces?ref=DTG-102-fix-mock-output-in-terragrunt-secrets"
 }
 
 dependencies {
@@ -20,12 +20,14 @@ dependency "cluster_ip" {
 locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   namespace        = local.environment_vars.locals.namespace
+  env              = local.environment_vars.locals.environment
+  zone             = local.environment_vars.locals.zone
 }
 
 inputs = {
+  env                    = "${local.env}"
+  zone                   = "${local.zone}"
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate
-  client_certificate     = dependency.cluster_ip.outputs.client_certificate
-  client_key             = dependency.cluster_ip.outputs.client_key
   namespace              = ["consul", "app", "monitoring", "customnames"]
   kuber_host             = "https://${dependency.cluster_ip.outputs.cluster_endpoint}"
 }
