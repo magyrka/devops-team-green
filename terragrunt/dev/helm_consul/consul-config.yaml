@@ -4,7 +4,7 @@
 ui:
   enabled: true
   service:
-    type: LoadBalancer
+    type: ClusterIP
 #  metrics:
 #    enabled: true
 #    provider: "prometheus"
@@ -15,6 +15,8 @@ global:
   enabled: true
   name: consul
   datacenter: gcp-dev
+  peering:
+    enabled: true
   tls:
     enabled: true
   acls:
@@ -28,7 +30,7 @@ global:
 server:
   enabled: true
   # The number of server agents to run. This determines the fault tolerance of the cluster.
-  replicas: 1
+  replicas: 3
 
 # Enable Consul connect pod injection
 connectInject:
@@ -42,6 +44,6 @@ connectInject:
       serviceType: LoadBalancer
 
 # Reach Other DC
-#meshGateway:
-#  enabled: true
+meshGateway:
+  enabled: true # mandatory for k8s cluster peering
 #  replicas: 1
