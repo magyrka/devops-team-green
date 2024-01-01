@@ -5,7 +5,7 @@ locals {
   zone              = "us-west2-b"
   project_id        = "cisco-team-green"
   count_nodes       = 3
-  node_machine_type = "e2-small"
+  node_machine_type = "e2-medium"
   serv_account      = "awx-350@cisco-team-green.iam.gserviceaccount.com"
 
   # For Consul (helm)
