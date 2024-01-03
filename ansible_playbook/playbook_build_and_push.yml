@@ -18,16 +18,17 @@
         dest: "{{ APP_PATH }}"
         version: "{{ GIT_BRANCH }}" 
         
-    - name: Log into DockerHub
+    - name: Log into Nexus
       docker_login:
-        username: "{{ DH_USERNAME }}"
-        password: "{{ DH_PASSWORD }}"
+        registry_url: "{{ NEXUS_HOSTNAME }}"
+        username: "{{ NEXUS_USERNAME }}"
+        password: "{{ NEXUS_PASSWORD }}"
 
-    - name: Build and Push Docker image to Docker Hub
+    - name: Build and Push Docker image to Nexus Registry
       docker_image:
-        name: "schedule-app"
-        tag: "v1"
-        repository: "{{ DH_REPO }}"
+        name: "{{ NEXUS_HOSTNAME }}/{{ IMAGE_NAME }}"
+        tag: "{{ IMAGE_TAG }}"
+        repository: "{{ NEXUS_HOSTNAME }}/{{ IMAGE_NAME }}"
         build:
           path: "{{ APP_PATH }}"
           nocache: true
