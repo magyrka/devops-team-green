@@ -1,0 +1,6 @@
+roles:
+  - name: geerlingguy.java
+    java_packages: openjdk-8-jre-headless
+
+  - name: ansible-thoteam.nexus3-oss
+    tags: ["ansible-thoteam.nexus3-oss"]

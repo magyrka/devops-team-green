@@ -1,6 +1,11 @@
+
 collections:
   - name: awx.awx
   
+  - name: community.general
+    src:  git@github.com:ansible-collections/community.general.git
+    scm:  git
+
   - name: community.postgresql
     src:  git@github.com:ansible-collections/community.postgresql.git
     scm:  git
@@ -9,4 +14,3 @@ collections:
     src: git@github.com:ansible-collections/community.docker.git
     scm: git
 #    version: 3.4.11
-
