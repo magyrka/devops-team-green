@@ -82,11 +82,11 @@ inputs = {
     },
     {
       name  = "backend_image.name"
-      value = get_env("IMAGE_NAME", "${local.be_img_name}")
+      value = get_env("TF_VAR_BE_IMAGE_DEV_NAME", "${local.be_img_name}")
     },
     {
       name  = "backend_image.tag"
-      value = get_env("BE_IMAGE_DEV_TAG", "${local.be_img_tag}")
+      value = get_env("TF_VAR_BE_IMAGE_DEV_TAG", "${local.be_img_tag}")
     },
     {
       name  = "postgres.db_user"
@@ -101,9 +101,7 @@ inputs = {
       value = dependency.mongo_db.outputs.instance_private_IP
     }
   ]
-
   set_sensitive = [
-    # Kubernetes Secret Will be created via charts/backend/template/secret.yaml
     {
       path  = "nexus.token"
       value = dependency.secret_manager.outputs.nexus_token
