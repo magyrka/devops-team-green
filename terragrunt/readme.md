@@ -6,6 +6,11 @@
 
 This project relies on custom Terraform modules located within the `terraform/modules` directory. These modules have been specifically designed to enhance the deployment and management of various infrastructure components, ensuring modularity and efficiency in handling resources within the environment.
 
+- [Description](#description)
+- [Install google cloud cli](#install-the-gcloud-cli)
+- [Login to GCP](#login-to-gcp-locally-)
+- [Usage](#usage)
+- [Exporting Image Names, Tags](#exporting-environment-variables)
 ---------------------------
 
 ### Prerequisites
@@ -73,42 +78,64 @@ You will be asked about dependencies:
 ```text
 Detected dependent modules:
 /terragrunt/dev/helm_app
-/terragrunt/dev/helm_consol
+/terragrunt/dev/helm_consul
 /terragrunt/dev/kuber_namespaces
 ```
 ----------------------
-How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env) for example frontend image tag:
+### Setting Environment Variables for Images
+To configure environment variables, such as the frontend, backend image tag, follow these steps.
+
+How to pass [environment variable ](https://terragrunt.gruntwork.io/docs/reference/built-in-functions/#get_env),
+for example frontend image tag. 
+
+#### Example Code Snippet from the Module:
+Inside the module's code, there's a function get_env(NAME, DEFAULT) that sets the frontend image tag:
 ```text
-get_env(NAME, DEFAULT)
+  #  get_env(NAME, DEFAULT)
 {
    name  = "frontend_image.tag"
-   value = get_env("FR_IMAGE_DEV_TAG", "${local.fe_img_tag}")
+   value = get_env("TF_VAR_FR_IMAGE_DEV_NAME", "${local.fe_img_tag}")
 }
 ```
 
+#### Exporting Environment Variables:
+Ensure that you export these variables within your environment `export TF_VAR_FR_IMAGE_DEV_NAME=1.1.2`. 
+When executing `terragrunt plan`, they will be automatically picked up.
 ```shell
-terragrunt run-all plan -var FR_IMAGE_DEV_TAG=1.0.1
+terragrunt run-all plan
 ```
-here list of variables for Docker image Tags:
+#### Here list of variables for Docker images:
+```text
 - Environment Dev:
-  - BE_IMAGE_DEV_TAG
-  - FR_IMAGE_DEV_TAG
-- Environment Stage:
-  - BE_IMAGE_STAGE_TAG
-  - FR_IMAGE_STAGE_TAG
-https://developer.hashicorp.com/consul/docs/k8s/helm
+   TF_VAR_FR_IMAGE_DEV_NAME
+   TF_VAR_FR_IMAGE_DEV_TAG
+   TF_VAR_BE_IMAGE_DEV_NAME
+   TF_VAR_BE_IMAGE_DEV_TAG
+
+- Environment Stage:             
+   TF_VAR_FR_IMAGE_STAGE_NAME    
+   TF_VAR_FR_IMAGE_STAGE_TAG     
+   TF_VAR_BE_IMAGE_STAGE_NAME    
+   TF_VAR_BE_IMAGE_STAGE_TAG     
+   
+- Environment Prod:
+   TF_VAR_FR_IMAGE_PROD_NAME
+   TF_VAR_FR_IMAGE_PROD_TAG
+   TF_VAR_BE_IMAGE_PROD_NAME
+   TF_VAR_BE_IMAGE_PROD_TAG
+```
 
 -------------------------
-## Consul for Kubernetes
+## Consul for Kubernetes 
 
 This repository facilitates the installation of Consul within our Kubernetes cluster using Terragrunt. 
 The installation is managed via the `helm_consul` module, utilizing the Helm chart sourced from HashiCorp's Consul for Kubernetes repository.
 
 ### Installation Steps:
 - Terragrunt Setup:
-Ensure Terragrunt is installed and configured properly. 
+Ensure Terragrunt is installed and configured properly.
 - Deploy Consul:
-Use Terragrunt to deploy Consul to your Kubernetes cluster.
+Use Terragrunt to deploy Consul to your Kubernetes cluster. [Values list](https://developer.hashicorp.com/consul/docs/k8s/helm)
 - Helm [Chart Source](https://github.com/hashicorp/consul-k8s) :
 The Helm chart used for Consul installation is retrieved from HashiCorp's Consul for Kubernetes repository. 
 For detailed configuration options and chart specifics, refer to the Helm chart documentation provided in the repository.

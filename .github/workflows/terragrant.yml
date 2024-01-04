@@ -1,5 +1,5 @@
 name: 'Terragrunt'
-run-name: "Terragrunt GCP"
+run-name: "Terragrunt GCP ${{ github.event.inputs.environment }}"
 
 env:
   tf_version: '1.6.5'
@@ -15,16 +15,13 @@ on:
     inputs:
       logLevel:
         description: 'Log level'
-        required: true
+        required: false
         default: 'info'
         type: choice
         options:
           - info
           - warning
           - debug
-      tags:
-        description: 'Pipeline Tags'
-        required: false
       runner:
         description: 'Runner to use:'
         required: true
@@ -43,6 +40,39 @@ on:
           - dev
           - stage
           - prod
+      dev_front_img_name:
+        description: 'Dev Frontend Image name'
+        default: "nexus.green-team-schedule.pp.ua/frontend"
+        required: true
+      dev_front_img_tag:
+        description: 'Dev Frontend Image tag'
+        default: "1.0.1"
+        required: true
+      dev_back_img_name:
+        description: 'Dev Backend Image name'
+        default: "nexus.green-team-schedule.pp.ua/backend"
+        required: true
+      dev_back_img_tag:
+        description: 'Dev Backend Image tag'
+        default: "1.0.0"
+        required: true
+      # stage_front_img_name:
+      #   description: 'Stage Frontend Image name'
+      #   default: "nexus.green-team-schedule.pp.ua/frontend"
+      #   required: true
+      # stage_front_img_tag:
+      #   description: 'Stage Frontend Image tag'
+      #   default: "1.0.1"
+      #   required: true
+      # prod_front_img_name:
+      #   description: 'Stage Frontend Image name'
+      #   default: "nexus.green-team-schedule.pp.ua/frontend"
+      #   required: true
+      # prod_front_img_tag:
+      #   description: 'Stage Frontend Image tag'
+      #   default: "1.0.1"
+      #   required: true
+
   push:
      paths:
      - "terragrunt/**"
@@ -91,9 +121,14 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: 'run-all validate'
 
-    - name: Terragrunt "select from secrets"
+    - name: Terragrunt ${{ vars.TG_COMMAND }}
     # https://terragrunt.gruntwork.io/docs/reference/cli-options/#terragrunt-non-interactive
       uses: gruntwork-io/terragrunt-action@v2
+      env:
+        TF_VAR_FR_IMAGE_DEV_NAME: ${{ github.event.inputs.dev_front_img_name }}
+        TF_VAR_FR_IMAGE_DEV_TAG: ${{ github.event.inputs.dev_front_img_tag }}
+        TF_VAR_BE_IMAGE_DEV_NAME: ${{ github.event.inputs.dev_back_img_name }}
+        TF_VAR_BE_IMAGE_DEV_TAG: ${{ github.event.inputs.dev_back_img_tag }}
       with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
