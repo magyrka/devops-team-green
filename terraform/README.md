@@ -2,9 +2,6 @@
 
 <img src="../screenshots/tf-logo.png" alt="Terraform Logo" width="160" style="float: right; margin-left: 20px;"/>
 
-
-- ()[#] 
-
 ### "Schedule" Project Structure:
 
 The project is organized into several directories:

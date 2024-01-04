@@ -68,11 +68,11 @@ inputs = {
     },
     {
       name  = "frontend_image.name"
-      value = get_env("TF_VAR_FR_IMAGE_PROD_NAME", "${local.fe_img_name}")
+      value = get_env("IMAGE_NAME", "${local.fe_img_name}")
     },
     {
       name  = "frontend_image.tag"
-      value = get_env("TF_VAR_FR_IMAGE_PROD_TAG", "${local.fe_img_tag}")
+      value = get_env("FR_IMAGE_PROD_TAG", "${local.fe_img_tag}")
     },
   ]
   cluster_ca_certificate = dependency.cluster_ip.outputs.cluster_ca_certificate

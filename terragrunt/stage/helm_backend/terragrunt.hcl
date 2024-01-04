@@ -82,11 +82,11 @@ inputs = {
     },
     {
       name  = "backend_image.name"
-      value = get_env("TF_VAR_BE_IMAGE_STAGE_NAME", "${local.be_img_name}")
+      value = get_env("IMAGE_NAME", "${local.be_img_name}")
     },
     {
       name  = "backend_image.tag"
-      value = get_env("TF_VAR_BE_IMAGE_STAGE_TAG", "${local.be_img_tag}")
+      value = get_env("BE_IMAGE_STAGE_TAG", "${local.be_img_tag}")
     },
     {
       name  = "postgres.db_user"
